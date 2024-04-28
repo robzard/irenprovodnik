@@ -51,6 +51,8 @@ services:
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
       - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
+      - certbot_conf:/etc/letsencrypt/live:ro
+      - certbot_www:/var/www/certbot
     networks:
       - internal_network
     mem_limit: 100m  # Nginx эффективно использует память, для него обычно достаточно небольшого объема
@@ -58,6 +60,15 @@ services:
     depends_on:
       - flask-app
       - pgadmin
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    depends_on:
+      - nginx
 
   aiogram-bot:
     build: ./bot
@@ -187,6 +198,8 @@ volumes:
   grafana_data:
   prometheus_data:
   pgadmin_data:
+  certbot_conf:
+  certbot_www:
 
 networks:
   internal_network:
