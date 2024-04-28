@@ -61,6 +61,7 @@ services:
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
       - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
+      - /var/www/certbot:/var/www/certbot
       - ./certbot/logs:/var/log/letsencrypt
     networks:
       - internal_network
