@@ -55,8 +55,6 @@ services:
     environment:
       - DOMEN_WEB_APP=${DOMEN_WEB_APP}
     volumes:
-      - certbot_conf:/etc/letsencrypt/live
-      - certbot_www:/var/www/certbot
       - /etc/letsencrypt/live/${DOMEN_WEB_APP}.ru:/etc/letsencrypt/live/${DOMEN_WEB_APP}.ru
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
       - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
