@@ -20,6 +20,17 @@ then
     sudo apt-get update && sudo apt-get install -y apache2-utils
 fi
 
+# Проверка и установка Docker
+if ! command -v docker &> /dev/null
+then
+    echo "Docker could not be found, installing..."
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo usermod -aG docker $USER
+    newgrp docker
+fi
+
+# Проверка и установка Docker Compose
 if ! command -v docker-compose &> /dev/null
 then
     echo "docker-compose could not be found, installing..."
