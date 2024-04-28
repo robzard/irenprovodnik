@@ -2,7 +2,7 @@
 
 # Загрузите ключ в ssh-agent
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/teylaschool_deploy
+ssh-add ~/.ssh/id_rsa
 
 # Перейдите в директорию проекта
 cd irenprovodnik
