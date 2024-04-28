@@ -36,6 +36,14 @@ services:
     depends_on:
       - postgres
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot --webroot-path=/var/www/certbot; sleep 12h & wait $${!}; done;'"
+    depends_on:
+      - nginx
 
   nginx:
     build: ./nginx
@@ -47,6 +55,8 @@ services:
     environment:
       - DOMEN_WEB_APP=${DOMEN_WEB_APP}
     volumes:
+      - certbot_conf:/etc/letsencrypt/live
+      - certbot_www:/var/www/certbot
       - /etc/letsencrypt/live/${DOMEN_WEB_APP}.ru:/etc/letsencrypt/live/${DOMEN_WEB_APP}.ru
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
       - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
@@ -187,6 +197,8 @@ volumes:
   grafana_data:
   prometheus_data:
   pgadmin_data:
+  certbot_conf: # Добавьте этот том для хранения настроек и сертификатов Certbot
+  certbot_www:   # Добавьте этот том для временного хранения файлов проверки от Certbot
 
 networks:
   internal_network:
