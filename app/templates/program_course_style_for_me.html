@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Программа курса - Онлайн-школа by Teyla</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .theme {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+            border-bottom: 1px solid #ccc;
+        }
+        .theme:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+        .theme:last-of-type{
+            border-radius: 0 0 12px 12px;
+            border-bottom: none;
+        }
+        .theme-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .theme-content {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.5s ease-out; /* Плавная анимация */
+		}
+        .assignments {
+            color: #6b7280;
+            font-size: 16px;
+            margin-top: 5px;
+			margin-bottom: 10px;
+        }
+        .module-content ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .module-content li {
+            margin-bottom: 8px;
+        }
+        .toggle-icon {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme" onclick="toggleThemeContent('theme1')">
+    <div class="theme-title">
+        Основы стиля и гардероба
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme1"></i>
+    </div>
+    <div class="assignments">2 урока из 4х частей, 1 практическое задание</div>
+    <div class="theme-content" id="theme1">
+        <ul class="module-content">
+            <li>Основные определения и характеристики базового гардероба</li>
+            <li>Список базовых вещей по версии Донны Каран</li>
+            <li>Практика-пример «Составление базового гардероба»</li>
+        </ul>
+        <ul class="module-content">
+            <li>ДНК брендов</li>
+            <li>Алгоритм и важные правила разбора гардероба</li>
+        </ul>
+        <ul class="module-content">
+            <li>Примеры актуальных и не актуальных позиций</li>
+            <li>Практика-пример «Разбор гардероба»</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme2')">
+    <div class="theme-title">
+        Типы фигур
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme2"></i>
+    </div>
+    <div class="assignments">1 урок, 1 практическое задание</div>
+    <div class="theme-content" id="theme2">
+        <ul class="module-content">
+            <li>Визуальная коррекция фигуры</li>
+            <li>Определение типов фигур с фото-примерами и характеристиками</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme3')">
+    <div class="theme-title">
+        Работа с цветом
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme3"></i>
+    </div>
+    <div class="assignments">1 урок, 1 практическое задание</div>
+    <div class="theme-content" id="theme3">
+        <ul class="module-content">
+            <li>Теория цвета</li>
+            <li>Опережение и характеристики цвета</li>
+        </ul>
+        <ul class="module-content">
+            <li>Контрастность внешности</li>
+            <li>Правила использования цветового круга</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme4')">
+    <div class="theme-title">
+        Стилистические приёмы
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme4"></i>
+    </div>
+    <div class="assignments">2 урока, 2 практических задания</div>
+    <div class="theme-content" id="theme4">
+        <ul class="module-content">
+            <li>Как выглядеть дорого без больших затрат</li>
+            <li>Составление нестандартных комплектов</li>
+            <li>Подбор очков, шляп и других аксессуаров</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme5')">
+    <div class="theme-title">
+        Тренды и история моды
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme5"></i>
+    </div>
+    <div class="assignments">2 урока, 1 практическое задание</div>
+    <div class="theme-content" id="theme5">
+        <ul class="module-content">
+            <li>История возникновения трендов</li>
+            <li>Как отслеживать тренды</li>
+            <li>История моды от 1900-х до 2021-х
+                (урок от приглашенного спикера <a href="https://instagram.com/katykiri" target="_blank">Кати Кири</a>)
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme6')">
+    <div class="theme-title">
+        Макияж для себя
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme6"></i>
+    </div>
+    <div class="assignments">1 урок, 1 практическое задание</div>
+    <div class="assignments">Урок от приглашенного спикера <a href="https://instagram.com/permin0v/" target="_blank">Владимира Перминова</a></div>
+    <div class="theme-content" id="theme6">
+        <ul class="module-content">
+            <li>Основные правила повседневного макияжа</li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    function toggleThemeContent(themeId) {
+        var content = document.getElementById(themeId);
+        var icon = document.getElementById('icon-' + themeId);
+
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            icon.className = 'fas fa-chevron-down toggle-icon';
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            icon.className = 'fas fa-chevron-up toggle-icon';
+        }
+    }
+</script>
+
+</body>
+</html>

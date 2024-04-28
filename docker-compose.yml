@@ -1,0 +1,193 @@
+version: '2.4'
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    mem_limit: 1g
+    cpus: "1.0"
+    networks:
+      - internal_network
+
+  flask-app:
+    build: ./app
+    image: your_flask_image
+    restart: always
+    container_name: flask-app-container
+    command: gunicorn -w 2 -b 0.0.0.0:5000 --timeout 30 app:app
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - DATABASE=${DATABASE}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DOMEN_WEB_APP=${DOMEN_WEB_APP}
+    volumes:
+      - ./app:/app
+    networks:
+      - internal_network
+    mem_limit: 500m
+    cpus: "0.5"
+    depends_on:
+      - postgres
+
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+      - "5050:5050"
+    restart: always
+    environment:
+      - DOMEN_WEB_APP=${DOMEN_WEB_APP}
+    volumes:
+      - /etc/letsencrypt/live/${DOMEN_WEB_APP}.ru:/etc/letsencrypt/live/${DOMEN_WEB_APP}.ru
+      - /etc/letsencrypt/archive:/etc/letsencrypt/archive
+      - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
+      - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
+    networks:
+      - internal_network
+    mem_limit: 100m  # Nginx эффективно использует память, для него обычно достаточно небольшого объема
+    cpus: "0.25"
+    depends_on:
+      - flask-app
+      - pgadmin
+
+  aiogram-bot:
+    build: ./bot
+    ports:
+      - "8000:8000"  # webhook
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - DATABASE=${DATABASE}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - GIGACHAT_TOKEN=${GIGACHAT_TOKEN}
+      - WEBHOOK_PATH=${WEBHOOK_PATH}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+      - WEBAPP_HOST=${WEBAPP_HOST}
+      - WEBAPP_PORT=${WEBAPP_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+      - DOMEN_WEB_APP=${DOMEN_WEB_APP}
+    networks:
+      - internal_network
+    depends_on:
+      - postgres
+      - redis
+      - flask-app
+    mem_limit: 1000m
+    cpus: 1
+
+  redis:
+    image: "redis:latest"
+    restart: always
+    mem_limit: 200m  # Redis хранит данные в памяти, но для малых нагрузок не требует много
+    cpus: "0.25"  # Достаточно для поддержки быстрого доступа к данным
+    networks:
+      - internal_network
+
+  node-exporter:
+    image: prom/node-exporter
+    restart: always
+    command:
+      - '--collector.cpu'
+      - '--collector.meminfo'
+      - '--collector.diskstats'
+      - '--collector.filesystem'
+      - '--collector.loadavg'
+      - '--collector.netstat'
+    mem_limit: 50m
+    cpus: "0.1"
+    networks:
+      - internal_network
+
+
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    networks:
+      - internal_network
+    mem_limit: 500m
+    cpus: "0.5"
+    depends_on:
+      - node-exporter
+      - cadvisor
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    environment:
+      GF_SERVER_ROOT_URL: "https://${DOMEN_WEB_APP}.ru/grafana/"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"  # Позволяет Grafana работать на подпути
+      GF_DATABASE_HOST: ${DB_HOST}  # Хост базы данных PostgreSQL
+      GF_DATABASE_PORT: "5432"      # Порт базы данных PostgreSQL
+      GF_DATABASE_USER: ${POSTGRES_USER}   # Пользователь базы данных PostgreSQL
+      GF_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}   # Пароль пользователя базы данных PostgreSQL
+      GF_DATABASE_NAME: ${POSTGRES_DB}   # Название базы данных PostgreSQL
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - internal_network
+    mem_limit: 300m  # Grafana обычно не требует много памяти
+    cpus: "0.25"
+    depends_on:
+      - postgres
+      - prometheus
+
+  cadvisor: # Добавление cAdvisor
+    image: gcr.io/cadvisor/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - internal_network
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pal-vitek1111@mail.ru
+      PGADMIN_DEFAULT_PASSWORD: Monster7816361189!
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - internal_network
+    depends_on:
+      - postgres
+    mem_limit: 500m
+    cpus: "0.25"
+
+volumes:
+  postgres_data:
+  grafana_data:
+  prometheus_data:
+  pgadmin_data:
+
+networks:
+  internal_network:
+    driver: bridge

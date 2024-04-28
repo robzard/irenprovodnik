@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Программа курса - Онлайн-школа by Teyla</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .theme {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+            border-bottom: 1px solid #ccc;
+        }
+        .theme:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+        .theme:last-of-type{
+            border-radius: 0 0 12px 12px;
+            border-bottom: none;
+        }
+        .theme-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .theme-content {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.5s ease-out; /* Плавная анимация */
+		}
+        .assignments {
+            color: #6b7280;
+            font-size: 16px;
+            margin-top: 5px;
+			margin-bottom: 10px;
+        }
+        .module-content ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .module-content li {
+            margin-bottom: 8px;
+        }
+        .toggle-icon {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme" onclick="toggleThemeContent('theme1')">
+    <div class="theme-title">
+        Основы стиля и гардероба
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme1"></i>
+    </div>
+    <div class="assignments">2 урока из 4х частей, 1 практическое задание</div>
+    <div class="theme-content" id="theme1">
+        <ul class="module-content">
+            <li>Основные определения и характеристики базового гардероба</li>
+            <li>Список базовых вещей по версии Донны Каран</li>
+            <li>Практика-пример «Составление базового гардероба»</li>
+        </ul>
+        <ul class="module-content">
+            <li>ДНК брендов</li>
+            <li>Алгоритм и важные правила разбора гардероба</li>
+            <li>Вопросы для работы с клиентом</li>
+        </ul>
+        <ul class="module-content">
+            <li>Примеры актуальных и не актуальных позиций</li>
+            <li>Практика-пример «Разбор гардероба»</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme2')">
+    <div class="theme-title">
+        Типы фигур
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme2"></i>
+    </div>
+    <div class="assignments">1 урок, 1 практическое задание</div>
+    <div class="theme-content" id="theme2">
+        <ul class="module-content">
+            <li>Визуальная коррекция фигуры</li>
+            <li>Определение типов фигур с фото-примерами и характеристиками</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme3')">
+    <div class="theme-title">
+        Работа с цветом
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme3"></i>
+    </div>
+    <div class="assignments">1 урок, 1 практическое задание</div>
+    <div class="theme-content" id="theme3">
+        <ul class="module-content">
+            <li>Теория цвета</li>
+            <li>Опережение и характеристики цвета</li>
+        </ul>
+        <ul class="module-content">
+            <li>Контрастность внешности</li>
+            <li>Правила использования цветового круга</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme4')">
+    <div class="theme-title">
+        Стилистические приёмы
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme4"></i>
+    </div>
+    <div class="assignments">2 урока, 1 практическое задание</div>
+    <div class="theme-content" id="theme4">
+        <ul class="module-content">
+            <li>Как выглядеть дорого без больших затрат</li>
+            <li>Составление нестандартных комплектов</li>
+            <li>Подбор очков, шляп и других аксессуаров</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme5')">
+    <div class="theme-title">
+        Страхи начинающего стилиста и работа с возражениями клиентов
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme5"></i>
+    </div>
+    <div class="assignments">1 урок из 2х частей</div>
+    <div class="theme-content" id="theme5">
+        <ul class="module-content">
+            <li>Разбор страхов начинающего стилиста</li>
+            <li>Работа с возражениями клиентов</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme6')">
+    <div class="theme-title">
+        Работа с клиентом
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme6"></i>
+    </div>
+    <div class="assignments">1 урок из 2х частей, 1 практическое задание</div>
+    <div class="theme-content" id="theme6">
+        <ul class="module-content">
+            <li>Психология влияния. Первая встреча с клиентом</li>
+            <li>Вопросы для выявления потребностей клиента</li>
+            <li>Типы проявления характера через образ</li>
+        </ul>
+        <ul class="module-content">
+            <li>Правила прешопинга</li>
+            <li>Как оценивать свои услуги</li>
+            <li>Практика-пример «шопинг-сопровождения» в ТЦ</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme7')">
+    <div class="theme-title">
+        История моды, тренды и стили
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme7"></i>
+    </div>
+    <div class="assignments">3 урока, 2 практических задания</div>
+    <div class="theme-content" id="theme7">
+        <ul class="module-content">
+            <li>История моды от 1900-х до 2021-х (урок от приглашенного спикера <a href="https://instagram.com/katykiri" target="_blank">Кати Кири</a>)</li>
+            <li>История возникновения трендов</li>
+
+        </ul>
+        <ul class="module-content">
+            <li>Как отслеживать тренды</li>
+            <li>Популярные стили в одежде и их характеристика</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme8')">
+    <div class="theme-title">
+        Онлайн-работа с клиентом
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme8"></i>
+    </div>
+    <div class="assignments">1 урок</div>
+    <div class="theme-content" id="theme8">
+        <ul class="module-content">
+            <li>Алгоритм онлайн-разбора гардероба</li>
+            <li>Алгоритм онлайн-шопинга</li>
+            <li>Анкета для выявления потребностей при онлайн-работе</li>
+        </ul>
+        <ul class="module-content">
+            <li>Приложения и видео-инструкции для создания презентаций</li>
+            <li>Пример презентации для клиента</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme9')">
+    <div class="theme-title">
+        Социальные сети
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme9"></i>
+    </div>
+    <div class="assignments">3 урока, 2 практических задания</div>
+    <div class="theme-content" id="theme9">
+        <ul class="module-content">
+            <li>Основные правила успешного ведения соц.сетей: Instagram и Telegram (урок от приглашенного спикера <a href="https://www.instagram.com/mironova_mari?igsh=eXo2ZjUyN28wdmtp" target="_blank">Марии Мироновой</a>)</li>
+            <li>Составление визуального контента (урок от приглашенного спикера <a href="https://instagram.com/oksiaction" target="_blank">Оксаны Кузнецовой</a>)</li>
+            <li>Публичное выступление. Как коммуницировать с аудиторией (урок от приглашенного спикера <a href="https://instagram.com/ivan_vozmilove/" target="_blank">Ивана Возмилова</a>)</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme10')">
+    <div class="theme-title">
+        Сотрудничество с брендами
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme10"></i>
+    </div>
+    <div class="assignments">1 урок</div>
+    <div class="assignments">Урок от приглашенного спикера <a href="https://www.instagram.com/tanya_kaizen" target="_blank">Тани Кайзен</a></div>
+    <div class="theme-content" id="theme10">
+        <ul class="module-content">
+            <li>Как создавать контент, который используют бренды в своих соц сетях и зачем это нужно стилисту</li>
+            <li>Почему брендам интересно сотрудничество с маленькими блогами</li>
+            <li>Интеграции с брендами </li>
+        </ul>
+        <ul class="module-content">
+            <li>Виды сотрудничества</li>
+            <li>Пример письма бренду</li>
+            <li>Создание фото-контента (подбор образа, локации, ракурсов, поз)</li>
+        </ul>
+        <ul class="module-content">
+            <li>Обзоры для бренда</li>
+            <li>Распаковка и примерка (дома, в студии, в пространстве, где представлен бренд)</li>
+            <li>Приложения для обработки фото и видео</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme11')">
+    <div class="theme-title">
+        Мужской гардероб
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme11"></i>
+    </div>
+    <div class="assignments">1 урок из 3х частей</div>
+    <div class="assignments">Урок от приглашенного спикера <a href="https://www.instagram.com/arsenairapetov/" target="_blank">Арсена Айрапетова</a></div>
+    <div class="theme-content" id="theme11">
+        <ul class="module-content">
+            <li>Ошибки внешнего вида</li>
+            <li>Разновидности формального делового стиля</li>
+            <li>Костюм, рубашка, галстук и платок: разновидности, ошибки, посадка</li>
+        </ul>
+        <ul class="module-content">
+            <li>Разновидности неформального делового стиля</li>
+            <li>Аксессуары</li>
+            <li>Верхняя одежда</li>
+            <li>Обувь: разновидности и правила</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme12')">
+    <div class="theme-title">
+        Стилизация и продюсирование съемок. Введение в профессию
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme12"></i>
+    </div>
+    <div class="assignments">1 урок</div>
+    <div class="assignments">Урок от приглашенного спикера <a href="https://instagram.com/oksiaction" target="_blank">Оксаны Кузнецовой</a></div>
+    <div class="theme-content" id="theme12">
+        <ul class="module-content">
+            <li>Виды съемок</li>
+            <li>Развитие насмотренности</li>
+            <li>Виды мудборда</li>
+        </ul>
+        <ul class="module-content">
+            <li>Подготовка и работа на съемке</li>
+            <li>Чек-лист необходимых вещей для работы стилиста на съемке</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme13')">
+    <div class="theme-title">
+        Я-бренд
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme13"></i>
+    </div>
+    <div class="assignments">2 урока</div>
+    <div class="assignments">Урок от приглашенного спикера <a href="https://instagram.com/ivan_vozmilove/" target="_blank">Ивана Возмилова</a></div>
+    <div class="theme-content" id="theme13">
+        <ul class="module-content">
+            <li>Что такое личный бренд, для чего он нужен и как грамотно выстроить личную бренд стратегию</li>
+            <li>Умение грамотно распределять время и внедрение инструментов для эффективной работы стилиста</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme14')">
+    <div class="theme-title">
+        Макияж для себя
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme14"></i>
+    </div>
+    <div class="assignments">1 урок</div>
+    <div class="assignments">Урок от приглашенного спикера <a href="https://instagram.com/permin0v/" target="_blank">Владимира Перминова</a></div>
+    <div class="theme-content" id="theme14">
+        <ul class="module-content">
+            <li>Основные правила повседневного макияжа</li>
+        </ul>
+    </div>
+</div>
+
+<div class="theme" onclick="toggleThemeContent('theme15')">
+
+    <div class="theme-title">
+        Мотивационное интервью с Максимом Сапожниковым
+        <i class="fas fa-chevron-down toggle-icon" id="icon-theme15"></i>
+    </div>
+    <div class="assignments">Приглашённый гость <a href="https://instagram.com/maximsap.ru" target="_blank">Максим Сапожников</a></div>
+    <div class="theme-content" id="theme15">
+        <ul class="module-content">
+            <li>Основатель международной продакшн-компании и онлайн-журнала FashionToMax, создатель коммьюнити
+                креаторов
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    function toggleThemeContent(themeId) {
+        var content = document.getElementById(themeId);
+        var icon = document.getElementById('icon-' + themeId);
+
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            icon.className = 'fas fa-chevron-down toggle-icon';
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            icon.className = 'fas fa-chevron-up toggle-icon';
+        }
+    }
+</script>
+
+</body>
+</html>

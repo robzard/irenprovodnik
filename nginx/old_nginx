@@ -1,0 +1,80 @@
+events {}
+
+http {
+    proxy_headers_hash_max_size 512;  # Добавленная строка
+    proxy_headers_hash_bucket_size 64;  # Добавленная строка
+    env DOMEN_WEB_APP;
+    server {
+        listen 80;
+        server_name $DOMEN_WEB_APP.ru; # Ваш домен
+        return 301 https://$host$request_uri; # Перенаправление HTTP на HTTPS
+    }
+
+    server {
+        listen 443 ssl;
+        server_name $DOMEN_WEB_APP.ru; # Ваш домен
+
+        ssl_certificate /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/privkey.pem;
+
+        # SSL настройки
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256';
+        ssl_prefer_server_ciphers on;
+
+        location / {
+            proxy_pass http://flask-app:5000; # Перенаправление на Flask-приложение
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /grafana/ {
+            proxy_pass http://grafana:3000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            # Добавленные строки
+            proxy_redirect     off;
+            proxy_set_header   Upgrade $http_upgrade;
+            proxy_set_header   Connection "Upgrade";
+        }
+
+        location /prometheus/ {
+            proxy_pass http://prometheus:9090/prometheus/;
+        }
+
+        location /bot {
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_redirect off;
+            proxy_buffering off;
+            proxy_pass http://aiogram-bot:8000;
+        }
+    }
+
+    server {
+        listen 5050 ssl;
+        server_name $DOMEN_WEB_APP.ru;
+
+        ssl_certificate /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/privkey.pem;
+
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+
+        location / {
+            proxy_pass http://pgadmin:80;
+            proxy_set_header Host $host:5050;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $host:$server_port;
+        }
+    }
+
+}

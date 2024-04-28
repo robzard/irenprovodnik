@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Форма Заполнения Курса</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+        ...Подождите
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const initData = Telegram.WebApp.initData;
+
+            fetch('/validate_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(initData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Если аутентификация успешна, перенаправьте на главную страницу
+                    window.location.href = data.redirect;
+                } else {
+                    // Обработка ошибки, если необходимо
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                // Обработка ошибки, если необходимо
+            });
+        });
+    </script>
+</body>
+</html>
