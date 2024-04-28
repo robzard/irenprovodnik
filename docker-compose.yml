@@ -36,14 +36,6 @@ services:
     depends_on:
       - postgres
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - certbot_conf:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    depends_on:
-      - nginx
 
   nginx:
     build: ./nginx
@@ -58,8 +50,6 @@ services:
       - /etc/letsencrypt/live/${DOMEN_WEB_APP}.ru:/etc/letsencrypt/live/${DOMEN_WEB_APP}.ru
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
       - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
-      - certbot_conf:/etc/letsencrypt/live:ro
-      - certbot_www:/var/www/certbot
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
     networks:
       - internal_network
@@ -197,8 +187,6 @@ volumes:
   grafana_data:
   prometheus_data:
   pgadmin_data:
-  certbot_conf:
-  certbot_www:
 
 networks:
   internal_network:
