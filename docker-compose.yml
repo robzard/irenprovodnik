@@ -41,9 +41,11 @@ services:
     volumes:
       - certbot_conf:/etc/letsencrypt
       - certbot_www:/var/www/certbot
+      - ./certbot/logs:/var/log/letsencrypt  # Add volume for Certbot logs
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot --webroot-path=/var/www/certbot; sleep 12h & wait $${!}; done;'"
     depends_on:
       - nginx
+    restart: unless-stopped
 
   nginx:
     build: ./nginx
@@ -59,6 +61,7 @@ services:
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
       - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
+      - ./certbot/logs:/var/log/letsencrypt
     networks:
       - internal_network
     mem_limit: 100m  # Nginx эффективно использует память, для него обычно достаточно небольшого объема
@@ -197,6 +200,7 @@ volumes:
   pgadmin_data:
   certbot_conf: # Добавьте этот том для хранения настроек и сертификатов Certbot
   certbot_www:   # Добавьте этот том для временного хранения файлов проверки от Certbot
+  certbot_logs:
 
 networks:
   internal_network:
