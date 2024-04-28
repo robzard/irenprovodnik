@@ -55,6 +55,9 @@ services:
     environment:
       - DOMEN_WEB_APP=${DOMEN_WEB_APP}
     volumes:
+      - /etc/letsencrypt/live/${DOMEN_WEB_APP}.ru:/etc/letsencrypt/live/${DOMEN_WEB_APP}.ru
+      - /etc/letsencrypt/archive:/etc/letsencrypt/archive
+      - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
       - certbot_conf:/etc/letsencrypt/live:ro
       - certbot_www:/var/www/certbot
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
