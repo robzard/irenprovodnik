@@ -13,6 +13,21 @@ git checkout $CHECKOUT_BRANCH
 # Загрузка переменных из .env файла
 source .env
 
+#при первом запуске
+if ! command -v htpasswd &> /dev/null
+then
+    echo "htpasswd could not be found, installing..."
+    sudo apt-get update && sudo apt-get install -y apache2-utils
+fi
+
+if ! command -v docker-compose &> /dev/null
+then
+    echo "docker-compose could not be found, installing..."
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+fi
+#при первом запуске
+
 # Проверка и создание файла .htpasswd
 if [ ! -f /tmp/.htpasswd ]; then
   apt update && apt install apache2-utils
