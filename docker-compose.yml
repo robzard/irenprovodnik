@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    mem_limit: 1g
+    cpus: "1.0"
     networks:
       - internal_network
 
@@ -29,8 +31,11 @@ services:
       - ./app:/app
     networks:
       - internal_network
+    mem_limit: 500m
+    cpus: "0.5"
     depends_on:
       - postgres
+
 
   nginx:
     build: ./nginx
@@ -46,11 +51,10 @@ services:
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive
       - /etc/letsencrypt/renewal:/etc/letsencrypt/renewal
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
-      - certbot_conf:/etc/letsencrypt/live:ro
-      - certbot_www:/var/www/certbot
     networks:
       - internal_network
     mem_limit: 100m  # Nginx эффективно использует память, для него обычно достаточно небольшого объема
+    cpus: "0.25"
     depends_on:
       - flask-app
       - pgadmin
@@ -91,10 +95,14 @@ services:
       - postgres
       - redis
       - flask-app
+    mem_limit: 1000m
+    cpus: 1
 
   redis:
     image: "redis:latest"
     restart: always
+    mem_limit: 200m  # Redis хранит данные в памяти, но для малых нагрузок не требует много
+    cpus: "0.25"  # Достаточно для поддержки быстрого доступа к данным
     networks:
       - internal_network
 
@@ -108,6 +116,8 @@ services:
       - '--collector.filesystem'
       - '--collector.loadavg'
       - '--collector.netstat'
+    mem_limit: 50m
+    cpus: "0.1"
     networks:
       - internal_network
 
@@ -124,6 +134,8 @@ services:
       - '--web.enable-lifecycle'
     networks:
       - internal_network
+    mem_limit: 500m
+    cpus: "0.5"
     depends_on:
       - node-exporter
       - cadvisor
@@ -145,6 +157,8 @@ services:
       - "3000:3000"
     networks:
       - internal_network
+    mem_limit: 300m  # Grafana обычно не требует много памяти
+    cpus: "0.25"
     depends_on:
       - postgres
       - prometheus
@@ -174,6 +188,8 @@ services:
       - internal_network
     depends_on:
       - postgres
+    mem_limit: 500m
+    cpus: "0.25"
 
 volumes:
   postgres_data:
