@@ -2,13 +2,13 @@ name: Deploy to Server
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
-  deploy-main:
-    if: github.ref == 'refs/heads/main'
+  deploy-master:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
