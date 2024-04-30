@@ -148,10 +148,12 @@ async def payment_and_cost():
                            url_path=courses_data[course_name_id]['url_buy_path'],
                            domen_web_app=os.getenv("DOMEN_WEB_APP"))
 
-@app.route('/send-yookassa_notification', methods=['POST'])
-def send_data():
+
+@app.route('/yookassa_notification', methods=['POST'])
+def yookassa_notification():
     data = request.json
     logger.info(f'yookassa_notification - {str(data)}')
+
 
 async def add_log_grafana(user_id: int, handler_name: str, selected_course: str = None):
     async with AsyncSession() as session:
