@@ -67,11 +67,14 @@ async def get_all_users():
 
 
 async def get_admins():
-    async with AsyncSession() as session:
-        query = select(User).where(User.is_admin==True)
-        result = await session.execute(query)
-        users = result.scalars().all()
-        return [admin.user_id for admin in users]
+    try:
+        async with AsyncSession() as session:
+            query = select(User).where(User.is_admin==True)
+            result = await session.execute(query)
+            users = result.scalars().all()
+            return [admin.user_id for admin in users]
+    except Exception as ex:
+        return []
 
 
 async def log_grafana_after(event: Update, fsm_data: FsmData, before_handler_name: str | None, log_type: str, exception: str = None, traceback: str = None):
