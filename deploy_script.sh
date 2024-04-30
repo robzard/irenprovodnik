@@ -66,7 +66,7 @@ if [ ! -f "/etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem" ] || [ ! -f "/
     echo "Сертификаты не найдены. Запускаем Certbot для создания сертификатов..."
 
     # Остановка сервисов, которые могут использовать порт 80
-    docker-compose stop nginx
+    docker compose stop nginx
 
     # Запуск Certbot
     docker run -it --rm -p 80:80 --name certbot \
@@ -78,5 +78,5 @@ if [ ! -f "/etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem" ] || [ ! -f "/
     docker cp certbot:/etc/letsencrypt/live/irenprovodnik.ru/privkey.pem .
 
     # Перезапуск сервисов после получения сертификатов
-    docker-compose start nginx
+    docker compose start nginx
 fi
