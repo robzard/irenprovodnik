@@ -69,10 +69,7 @@ if [ ! -f "/etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem" ] || [ ! -f "/
     docker compose stop nginx
 
     # Запуск Certbot
-    docker run -it --rm -p 80:80 --name certbot \
-        certbot/certbot certonly --standalone \
-        -d $DOMEN_WEB_APP.ru --agree-tos \
-        --email $DOMAIN_EMAIL --non-interactive
+    docker run -it --rm -p 80:80 certbot/certbot certonly --standalone -d irenprovodnik.ru --agree-tos --email pal-vitek1111@mail.ru
 
     docker cp certbot:/etc/letsencrypt/live/irenprovodnik.ru/fullchain.pem .
     docker cp certbot:/etc/letsencrypt/live/irenprovodnik.ru/privkey.pem .
