@@ -96,11 +96,3 @@ async def renew_subscription(message: types.Message, state: FSMContext):
         await message.answer("Не удалось продлить подписку. Пожалуйста, попробуйте снова.")
 
 
-def set_logger():
-    root_logger = logging.getLogger()
-    root_logger.setLevel(logging.DEBUG)
-    stream_handler = logging.StreamHandler(sys.stderr)
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s:%(lineno)d - %(message)s')
-    stream_handler.setFormatter(formatter)
-    root_logger.addHandler(stream_handler)
-

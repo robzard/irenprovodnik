@@ -36,7 +36,7 @@ class DatabaseSessionMiddleware(BaseMiddleware):
         logging.debug('BEFORE UPDATE fsm_data - ' + str(fsm_data))
         await handler(event, data)
 
-        await fsm_data.update_data()
+        # await fsm_data.update_data()
 
         await self.log_grafana(event, fsm_data, before_handler_name)
 
