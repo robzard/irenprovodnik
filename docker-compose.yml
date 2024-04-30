@@ -44,6 +44,7 @@ services:
     # и снова мониторуем директорию nginx
     volumes:
       - ./nginx/:/etc/nginx/
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     build:
       context: ./certbot
       dockerfile: Dockerfile
@@ -66,6 +67,7 @@ services:
       - /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem:/etc/ssl/certs/cert.pem
       - /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/privkey.pem:/etc/ssl/private/key.pem
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
+    command: "/bin/sh -c 'nginx && while :; do sleep 6h & wait $${!}; nginx -s reload; done'"
     networks:
       - internal_network
     mem_limit: 100m  # Nginx эффективно использует память, для него обычно достаточно небольшого объема
