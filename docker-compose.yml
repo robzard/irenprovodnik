@@ -73,6 +73,7 @@ services:
     depends_on:
       - flask-app
       - pgadmin
+      - certbot
 
   aiogram-bot:
     build: ./bot
