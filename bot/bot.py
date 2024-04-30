@@ -77,7 +77,7 @@ def set_logger():
 
 
 def main() -> None:
-    # create_database_and_tables()
+    create_database_and_tables()
 
     dp.update.outer_middleware(DatabaseSessionMiddleware(bot, AsyncSession))
     dp.message.middleware(ThrottlingMiddleware())
