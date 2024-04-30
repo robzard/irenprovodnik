@@ -59,3 +59,24 @@ git pull
 # Дополнительные команды для деплоя, например:
 docker compose build
 docker compose up -d
+
+
+# Проверка наличия сертификатов
+if [ ! -f "/etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem" ] || [ ! -f "/etc/letsencrypt/live/$DOMEN_WEB_APP.ru/privkey.pem" ]; then
+    echo "Сертификаты не найдены. Запускаем Certbot для создания сертификатов..."
+
+    # Остановка сервисов, которые могут использовать порт 80
+    docker-compose stop nginx
+
+    # Запуск Certbot
+    docker run -it --rm -p 80:80 --name certbot \
+        certbot/certbot certonly --standalone \
+        -d $DOMEN_WEB_APP.ru --agree-tos \
+        --email $DOMAIN_EMAIL --non-interactive
+
+    docker cp certbot:/etc/letsencrypt/live/irenprovodnik.ru/fullchain.pem .
+    docker cp certbot:/etc/letsencrypt/live/irenprovodnik.ru/privkey.pem .
+
+    # Перезапуск сервисов после получения сертификатов
+    docker-compose start nginx
+fi
