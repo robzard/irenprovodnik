@@ -13,5 +13,5 @@ rm -rf /etc/nginx/cert.pem
 rm -rf /etc/nginx/key.pem
 
 # копируем сертификаты из образа certbot в папку Nginx
-cp /etc/letsencrypt/live/certfolder*/fullchain.pem /etc/nginx/cert.pem
-cp /etc/letsencrypt/live/certfolder*/privkey.pem /etc/nginx/key.pem
+cp /etc/letsencrypt/live/irenprovodnik.ru/fullchain.pem /etc/nginx/cert.pem
+cp /etc/letsencrypt/live/irenprovodnik.ru/privkey.pem /etc/nginx/key.pem
