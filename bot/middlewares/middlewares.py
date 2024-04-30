@@ -25,7 +25,7 @@ class DatabaseSessionMiddleware(BaseMiddleware):
         logging.debug(f'Старт обработки - {get_event_text(event)} ({event.event_type})')
         state: FSMContext = data.get('state')
         fsm_data = FsmData(state)
-        await fsm_data.update_params_from_state()
+        # await fsm_data.update_params_from_state()
 
         before_handler_name = await self.get_before_handler(data, fsm_data)
 
