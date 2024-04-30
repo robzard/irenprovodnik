@@ -95,6 +95,8 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_DB=${REDIS_DB}
       - DOMEN_WEB_APP=${DOMEN_WEB_APP}
+      - YOOKASSA_SHOP_ID=${YOOKASSA_SHOP_ID}
+      - YOOKASSA_SECRET_KEY=${YOOKASSA_SECRET_KEY}
     networks:
       - internal_network
     depends_on:
