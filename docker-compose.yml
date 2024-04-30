@@ -63,8 +63,8 @@ services:
       - DOMEN_WEB_APP=${DOMEN_WEB_APP}
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/cert.pem:/etc/ssl/certs/cert.pem
-      - ./nginx/key.pem:/etc/ssl/private/key.pem
+      - /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem:/etc/ssl/certs/cert.pem
+      - /etc/letsencrypt/live/$DOMEN_WEB_APP.ru/privkey.pem:/etc/ssl/private/key.pem
       - /root/teyla_school/.htpasswd:/etc/nginx/.htpasswd
     networks:
       - internal_network
