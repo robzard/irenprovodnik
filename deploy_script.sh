@@ -71,8 +71,8 @@ if [ ! -f "/etc/letsencrypt/live/$DOMEN_WEB_APP.ru/fullchain.pem" ] || [ ! -f "/
     # Запуск Certbot
     docker run -it --rm -p 80:80 certbot/certbot certonly --standalone -d irenprovodnik.ru --agree-tos --email pal-vitek1111@mail.ru
 
-    docker cp certbot:/etc/letsencrypt/live/irenprovodnik.ru/fullchain.pem .
-    docker cp certbot:/etc/letsencrypt/live/irenprovodnik.ru/privkey.pem .
+    docker cp certbot/fullchain.pem:/etc/letsencrypt/live/irenprovodnik.ru/fullchain.pem
+    docker cp certbot/privkey.pem:/etc/letsencrypt/live/irenprovodnik.ru/privkey.pem
 
     # Перезапуск сервисов после получения сертификатов
     docker compose start nginx
