@@ -27,7 +27,7 @@ class DatabaseSessionMiddleware(BaseMiddleware):
         fsm_data = FsmData(state)
         # await fsm_data.update_params_from_state()
 
-        before_handler_name = await self.get_before_handler(data, fsm_data)
+        # before_handler_name = await self.get_before_handler(data, fsm_data)
 
         await self.registration_user(event)
 
@@ -38,7 +38,7 @@ class DatabaseSessionMiddleware(BaseMiddleware):
 
         # await fsm_data.update_data()
 
-        await self.log_grafana(event, fsm_data, before_handler_name)
+        # await self.log_grafana(event, fsm_data, before_handler_name)
 
         logging.debug('AFTER UPDATE fsm_data - ' + str(fsm_data))
 
