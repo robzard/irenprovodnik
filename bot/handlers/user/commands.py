@@ -34,6 +34,7 @@ router = Router(name=__name__)
 
 @router.message(Command('start'))
 async def subscribe_command(message: types.Message, state: FSMContext):
+    await state.clear()
     yk = YookassaHandler()
     url: str = yk.create_first_payment()
 
