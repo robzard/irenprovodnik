@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import sys
-from logging.handlers import TimedRotatingFileHandler
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command, StateFilter

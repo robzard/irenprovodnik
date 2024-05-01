@@ -1,6 +1,6 @@
 from datetime import timedelta
 from functools import wraps
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, make_response
 import logging
 from aiogram.utils.web_app import check_webapp_signature
 import json
@@ -152,7 +152,10 @@ async def payment_and_cost():
 @app.route('/yookassa_notification', methods=['POST'])
 def yookassa_notification():
     data = request.json
+    response = make_response(jsonify({'status': 'success'}))
+    response.status_code = 200
     logger.info(f'yookassa_notification - {str(data)}')
+    return response
 
 
 async def add_log_grafana(user_id: int, handler_name: str, selected_course: str = None):

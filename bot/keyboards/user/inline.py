@@ -1,3 +1,4 @@
+from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from config_data.config import load_config
@@ -113,3 +114,8 @@ def send_all() -> InlineKeyboardMarkup:
     builder.adjust(1)
     return builder.as_markup()
 
+
+def payment(url: str):
+    button = types.InlineKeyboardButton(text="Оформить подписку", url=url)
+    keyboard = types.InlineKeyboardMarkup(inline_keyboard=[[button]])  # Создаем объект клавиатуры
+    return keyboard

@@ -6,8 +6,16 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State, default_state
 from yookassa import Configuration, Payment
 
-
 from config_data.config import load_config
+from pathlib import Path
+import sys
+
+root_path = Path(__file__).parent.parent.parent.parent
+sys.path.append(str(root_path))
+
+from yookassa_payment.yookassa_handler import YookassaHandler
+
+from keyboards.user import inline
 
 config = load_config()
 
@@ -23,31 +31,15 @@ class SubscriptionState(StatesGroup):
 
 router = Router(name=__name__)
 
-@router.message(Command('subscribe'))
-async def subscribe_command(message: types.Message, state: FSMContext):
-    payment = Payment.create({
-        'amount': {
-            'value': '100.00',
-            'currency': 'RUB'
-        },
-        'confirmation': {
-            'type': 'redirect',
-            'return_url': 'https://your-website.com/return'
-        },
-        'capture': True,
-        'description': 'Первоначальная подписка на канал',
-        'save_payment_method': True,
-        'payment_method_data': {
-            'type': 'bank_card'
-        }
-    })
-    button = types.InlineKeyboardButton(text="Оплатить подписку", url=payment.confirmation.confirmation_url)
-    keyboard = types.InlineKeyboardMarkup(inline_keyboard=[[button]])  # Создаем объект клавиатуры
 
-    await state.update_data(payment_id=payment.id)
-    print(f'payment.id - {payment.id}')
-    await state.set_state(SubscriptionState.awaiting_payment_confirmation)
-    await message.answer("Перейдите по ссылке для оплаты подписки:", reply_markup=keyboard)
+@router.message(Command('start'))
+async def subscribe_command(message: types.Message, state: FSMContext):
+    yk = YookassaHandler()
+    url: str = yk.create_first_payment()
+
+    await state.update_data(yk=yk)
+    print(f'payment.id - {yk.payment_id}')
+    await message.answer("Перейдите по ссылке для оплаты подписки:", reply_markup=inline.payment(url))
 
 
 # Проверка статуса платежа
@@ -94,5 +86,3 @@ async def renew_subscription(message: types.Message, state: FSMContext):
         await message.answer("Ваша подписка успешно продлена на следующий месяц.")
     else:
         await message.answer("Не удалось продлить подписку. Пожалуйста, попробуйте снова.")
-
-

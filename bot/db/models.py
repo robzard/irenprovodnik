@@ -46,3 +46,13 @@ class GrafanaLogs(Base):
 
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.user_id'))
     creator: Mapped["User"] = relationship(back_populates='grafana_logs', lazy='selectin')
+
+
+class Payments(Base):
+    __tablename__ = 'payments'
+
+    id: Mapped[int_pk]
+    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.user_id'))
+    event: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+    payment_id: Mapped[str] = mapped_column(String)
