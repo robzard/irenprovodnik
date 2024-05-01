@@ -11,8 +11,11 @@ from sqlalchemy import create_engine, update
 
 from sqlalchemy_utils import database_exists, create_database
 
+from config_data.config import load_config
 from states.states import FsmData
 from .models import User, GrafanaLogs, Base
+
+config = load_config()
 
 db_url = f"postgresql+psycopg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DATABASE')}?options=-c%20timezone%3DAsia/Yekaterinburg"
 engine: AsyncEngine = create_async_engine(db_url)
