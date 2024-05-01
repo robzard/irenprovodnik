@@ -9,6 +9,5 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Скопируйте исходный код бота в контейнер
 COPY . .
-COPY ../yookassa_payment /bot/yookassa_payment
 
 CMD ["python", "bot.py"]

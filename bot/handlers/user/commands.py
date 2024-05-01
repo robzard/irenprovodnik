@@ -7,11 +7,6 @@ from aiogram.fsm.state import StatesGroup, State, default_state
 from yookassa import Configuration, Payment
 
 from config_data.config import load_config
-from pathlib import Path
-import sys
-
-root_path = Path(__file__).parent.parent.parent.parent
-sys.path.append(str(root_path))
 
 from yookassa_payment.yookassa_handler import YookassaHandler
 
@@ -34,20 +29,14 @@ router = Router(name=__name__)
 
 @router.message(Command('start'))
 async def subscribe_command(message: types.Message, state: FSMContext):
-    await state.clear()
     yk = YookassaHandler()
-    url: str = yk.create_first_payment()
-
-    await state.update_data(yk=yk)
-    print(f'payment.id - {yk.payment_id}')
+    url: str = yk.create_first_payment(message.chat.id)
     await message.answer("Перейдите по ссылке для оплаты подписки:", reply_markup=inline.payment(url))
 
 
 # Проверка статуса платежа
 @router.message(StateFilter(SubscriptionState.awaiting_payment_confirmation))
 async def payment_confirmation_check(message: types.Message, state: FSMContext):
-    await state.clear()
-    return
     data = await state.get_data()
     payment_id = data.get('payment_id')
     if payment_id:
