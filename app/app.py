@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncSessio
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.data_base.requests import save_payment
+from data_base.requests import save_payment
 from data_base.db import GrafanaManager
 
 db_url = f"postgresql+psycopg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DATABASE')}?options=-c%20timezone%3DAsia/Yekaterinburg"
