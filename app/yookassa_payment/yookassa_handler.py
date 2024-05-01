@@ -1,11 +1,13 @@
+import os
+
 from yookassa import Configuration, Payment
 from yookassa.domain.response import PaymentResponse
 
-from config_data.config import load_config
-
-config = load_config()
-Configuration.account_id = config.yookassa.shop_id
-Configuration.secret_key = config.yookassa.secret_key
+# from config_data.config import load_config
+#
+# config = load_config()
+Configuration.account_id = os.getenv('YOOKASSA_SHOP_ID')
+Configuration.secret_key = os.getenv('YOOKASSA_SECRET_KEY')
 
 
 class YookassaHandler:

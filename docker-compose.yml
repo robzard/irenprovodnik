@@ -27,6 +27,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DOMEN_WEB_APP=${DOMEN_WEB_APP}
+      - YOOKASSA_SHOP_ID=${YOOKASSA_SHOP_ID}
+      - YOOKASSA_SECRET_KEY=${YOOKASSA_SECRET_KEY}
     volumes:
       - ./app:/app
     networks:
