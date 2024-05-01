@@ -31,7 +31,8 @@ class YookassaHandler:
                 'type': 'bank_card'
             },
             'metadata': {
-                'telegram_user_id': user_id  # Сохранение ID пользователя Telegram
+                'telegram_user_id': user_id,
+                'qwe': 'qwe'
             }
         })
 
