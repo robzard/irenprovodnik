@@ -59,7 +59,11 @@ async def create_recurring_payment():
         },
         'capture': True,
         'description': 'Ежемесячная подписка на канал',
-        'payment_method_id': '2dc469aa-000f-5000-9000-19b6f25c2e75'  # Используем сохраненный payment_method_id
+        'payment_method_id': '2dc469aa-000f-5000-9000-19b6f25c2e75',
+        'metadata': {
+                'telegram_user_id': 601610220,
+                'qwe': 'qwe'
+            }
     })
     return payment
 
