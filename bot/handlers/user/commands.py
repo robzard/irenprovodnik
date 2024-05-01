@@ -46,6 +46,8 @@ async def subscribe_command(message: types.Message, state: FSMContext):
 # Проверка статуса платежа
 @router.message(StateFilter(SubscriptionState.awaiting_payment_confirmation))
 async def payment_confirmation_check(message: types.Message, state: FSMContext):
+    await state.clear()
+    return
     data = await state.get_data()
     payment_id = data.get('payment_id')
     if payment_id:
