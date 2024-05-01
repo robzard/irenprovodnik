@@ -11,7 +11,7 @@ from sqlalchemy import create_engine, update
 
 from sqlalchemy_utils import database_exists, create_database
 
-from states.states import FsmData
+# from states.states import FsmData
 from .models import User, GrafanaLogs, Base, Payments
 
 
@@ -50,32 +50,32 @@ async def get_admins():
         return []
 
 
-async def log_grafana_after(event: Update, fsm_data: FsmData, before_handler_name: str | None, log_type: str, exception: str = None, traceback: str = None):
-    async with AsyncSession() as session:
-        handler_type = await _determine_handler_type(event)
-        user_id, message_text = _extract_event_data(event)
-
-        data_fsm_json: str = json.dumps(fsm_data.__str__(), ensure_ascii=False)
-        handler_name = fsm_data.handler_name
-        selected_course = fsm_data.selected_course
-
-        # Создаем и сохраняем лог
-        log_entry = GrafanaLogs(
-            log_type=log_type,
-            user_id=user_id,
-            before_handler=before_handler_name,
-            handler=handler_name,
-            selected_course=selected_course,
-            handler_type=handler_type,
-            message_text=message_text,
-            fsm_data=data_fsm_json,
-            exception=exception,
-            traceback=traceback
-        )
-        session.add(log_entry)
-        await session.commit()
-
-        await update_user_time(user_id)
+# async def log_grafana_after(event: Update, fsm_data: FsmData, before_handler_name: str | None, log_type: str, exception: str = None, traceback: str = None):
+#     async with AsyncSession() as session:
+#         handler_type = await _determine_handler_type(event)
+#         user_id, message_text = _extract_event_data(event)
+#
+#         data_fsm_json: str = json.dumps(fsm_data.__str__(), ensure_ascii=False)
+#         handler_name = fsm_data.handler_name
+#         selected_course = fsm_data.selected_course
+#
+#         # Создаем и сохраняем лог
+#         log_entry = GrafanaLogs(
+#             log_type=log_type,
+#             user_id=user_id,
+#             before_handler=before_handler_name,
+#             handler=handler_name,
+#             selected_course=selected_course,
+#             handler_type=handler_type,
+#             message_text=message_text,
+#             fsm_data=data_fsm_json,
+#             exception=exception,
+#             traceback=traceback
+#         )
+#         session.add(log_entry)
+#         await session.commit()
+#
+#         await update_user_time(user_id)
 
 
 async def update_user_time(user_id):
