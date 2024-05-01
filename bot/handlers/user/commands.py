@@ -51,7 +51,7 @@ async def payment_confirmation_check(message: types.Message, state: FSMContext):
 
 
 # Функция для создания рекуррентного платежа
-async def create_recurring_payment(payment_method_id):
+async def create_recurring_payment():
     payment = Payment.create({
         'amount': {
             'value': '100.00',
@@ -59,20 +59,18 @@ async def create_recurring_payment(payment_method_id):
         },
         'capture': True,
         'description': 'Ежемесячная подписка на канал',
-        'payment_method_id': payment_method_id  # Используем сохраненный payment_method_id
+        'payment_method_id': '2dc469aa-000f-5000-9000-19b6f25c2e75'  # Используем сохраненный payment_method_id
     })
     return payment
 
 
 # Команда для продления подписки
 @router.message(Command('renew_subscription'))
-async def renew_subscription(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    payment_method_id = data.get('payment_id')
-    payment = await create_recurring_payment(payment_method_id)
+async def renew_subscription(message: types.Message):
+    payment = await create_recurring_payment()
 
     while payment.status != 'succeeded':
-        payment = Payment.find_one(payment_method_id)
+        payment = Payment.find_one('2dc469aa-000f-5000-9000-19b6f25c2e75')
 
     if payment.status == 'succeeded':
         await message.answer("Ваша подписка успешно продлена на следующий месяц.")
