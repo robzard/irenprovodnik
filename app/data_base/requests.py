@@ -126,3 +126,4 @@ async def save_payment(yookassa_response: dict):
         payment = Payments(user_id=user_id, event=event, status=status, payment_id=payment_id, description=description, amount=amount, income_amount=income_amount, reason=reason, response=response)
         session.add(payment)
         await session.commit()
+    return payment
