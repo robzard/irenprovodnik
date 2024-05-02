@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncSessio
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from utils.telegram_bot import send_telegram_message
 from data_base.requests import save_payment
 from data_base.db import GrafanaManager
 
