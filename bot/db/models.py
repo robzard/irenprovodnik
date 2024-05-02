@@ -56,3 +56,5 @@ class Payments(Base):
     event: Mapped[str] = mapped_column(String)
     status: Mapped[str] = mapped_column(String)
     payment_id: Mapped[str] = mapped_column(String)
+    reason: Mapped[str] = mapped_column(Text, nullable=True)
+    response: Mapped[Any] = mapped_column(JSON, nullable=True)

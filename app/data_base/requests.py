@@ -118,7 +118,9 @@ async def save_payment(yookassa_response: dict):
     user_id = yookassa_response.get('object').get('metadata').get('telegram_user_id')
     event, status = yookassa_response.get('event').split('.')
     payment_id = yookassa_response.get('object').get('payment_method').get('id')
+    reason = yookassa_response.get('object').get('cancellation_details').get('reason')
+    response = yookassa_response.__str__()
     async with AsyncSession() as session:
-        payment = Payments(user_id=user_id, event=event, status=status, payment_id=payment_id)
+        payment = Payments(user_id=user_id, event=event, status=status, payment_id=payment_id, reason=reason, response=response)
         session.add(payment)
         await session.commit()

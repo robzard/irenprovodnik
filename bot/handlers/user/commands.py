@@ -59,7 +59,7 @@ async def create_recurring_payment():
         },
         'capture': True,
         'description': 'Ежемесячная подписка на канал',
-        'payment_method_id': '2dc469aa-000f-5000-9000-19b6f25c2e75',
+        'payment_method_id': '2dc58ba5-000f-5000-8000-1409d057967c',
         'metadata': {
                 'telegram_user_id': 601610220,
                 'qwe': 'qwe'
@@ -74,7 +74,7 @@ async def renew_subscription(message: types.Message):
     payment = await create_recurring_payment()
 
     while payment.status != 'succeeded':
-        payment = Payment.find_one('2dc469aa-000f-5000-9000-19b6f25c2e75')
+        payment = Payment.find_one('2dc58ba5-000f-5000-8000-1409d057967c')
 
     if payment.status == 'succeeded':
         await message.answer("Ваша подписка успешно продлена на следующий месяц.")
