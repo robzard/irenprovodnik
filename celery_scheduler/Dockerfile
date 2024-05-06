@@ -1,7 +1,7 @@
 FROM python:3.8-slim
 
 # Установка рабочей директории
-WORKDIR /app
+WORKDIR /celery_scheduler
 
 # Копирование файлов Python зависимостей и установка их
 COPY requirements.txt .
