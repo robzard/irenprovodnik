@@ -20,6 +20,7 @@ kombu==5.3.7
 magic-filter==1.0.12
 multidict==6.0.5
 prompt-toolkit==3.0.43
+psycopg==3.1.18
 pydantic==2.7.1
 pydantic_core==2.18.2
 python-dateutil==2.9.0.post0
