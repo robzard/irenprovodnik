@@ -110,6 +110,19 @@ services:
     mem_limit: 1000m
     cpus: 1
 
+  celery:
+    build: .
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+    networks:
+      - internal_network
+
   redis:
     image: "redis:latest"
     restart: always
