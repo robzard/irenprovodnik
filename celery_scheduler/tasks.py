@@ -9,7 +9,7 @@ app = Celery('tasks', broker=redis_url, backend=redis_url)
 
 
 @app.task
-async def send_notification():
+def send_notification():
     # Ваш асинхронный код для отправки уведомления
     print("Sending notification...")
     logging.info("Sending notification...")
