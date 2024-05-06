@@ -1,12 +1,9 @@
 FROM python:3.8-slim
 
-WORKDIR /celery_scheduler
+WORKDIR /app
 
-# Копируем только папку celery_scheduler
-COPY . .
+COPY . /app
 
-# Устанавливаем зависимости
 RUN pip install -r requirements.txt
 
-# Запускаем Celery worker и beat
 CMD celery -A tasks worker --loglevel=info & celery -A tasks beat --loglevel=info
