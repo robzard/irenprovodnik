@@ -5,9 +5,7 @@ WORKDIR /app
 COPY . /app
 
 # Установите необходимые пакеты
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libpython3.10-dev && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y gcc libffi-dev
 
 # Теперь попробуйте установить backports.zoneinfo
 RUN pip install backports.zoneinfo

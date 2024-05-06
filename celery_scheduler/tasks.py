@@ -20,6 +20,6 @@ def send_notification():
 app.conf.beat_schedule = {
     'send-notification-every-day': {
         'task': 'tasks.send_notification',
-        'schedule': crontab(hour=15, minute=53),
+        'schedule': crontab(hour=16, minute=17),
     },
 }
