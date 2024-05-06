@@ -111,7 +111,7 @@ services:
     cpus: 1
 
   celery:
-    build: .
+    build: ./celery_scheduler
     environment:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
@@ -119,7 +119,7 @@ services:
     depends_on:
       - redis
     volumes:
-      - .:/app
+      - .:/celery_scheduler
     networks:
       - internal_network
 
