@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def my_daily_task():
     print("Выполнение задачи:", datetime.now())
-    logging.info("Выполнение задачи:", datetime.now())
+    logging.info("Выполнение задачи: %s", datetime.now())
 
 
 # Создаем планировщик
