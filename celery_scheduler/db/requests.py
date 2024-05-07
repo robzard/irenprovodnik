@@ -45,7 +45,7 @@ def get_latest_successful_payments():
                 and_(
                     Payments.event == 'payment',
                     Payments.status == 'succeeded',
-                    Payments.created_at > func.now()
+                    # Payments.created_at > func.now()
                 )
             ).group_by(Payments.user_id)
         ).subquery()
