@@ -2,10 +2,14 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 import logging
 
+from db.requests import get_latest_successful_payments
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def my_daily_task():
-    print("Выполнение задачи:", datetime.now())
+    payments = get_latest_successful_payments()
+    for payment in payments:
+        logging.info(f'user_id: {payment.user_id}')
     logging.info("Выполнение задачи: %s", datetime.now())
 
 
