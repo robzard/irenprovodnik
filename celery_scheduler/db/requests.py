@@ -43,7 +43,7 @@ AsyncSession: sessionmaker[AsyncSession] = sessionmaker(
 #         return payments
 
 async def get_latest_successful_payments():
-    with AsyncSession() as session:
+    async with AsyncSession() as session:
         # Подзапрос для выбора максимальной даты created_at для каждого user_id
         subquery = (
             select(
