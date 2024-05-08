@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngin
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.future import select
 from sqlalchemy import create_engine, update, and_, func
+from sqlalchemy.sql.expression import text
 
 from sqlalchemy_utils import database_exists, create_database
 
@@ -45,7 +46,7 @@ def get_latest_successful_payments():
                 and_(
                     Payments.event == 'payment',
                     Payments.status == 'succeeded',
-                    Payments.created_at < func.now()
+                    Payments.created_at + text("interval '1 month'") < func.now()
                 )
             ).group_by(Payments.user_id)
         ).subquery()
