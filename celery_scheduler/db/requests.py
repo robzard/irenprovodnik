@@ -38,20 +38,28 @@ SessionLocal = sessionmaker(bind=engine)
 def get_latest_successful_payments():
     with SessionLocal() as session:
         # Подзапрос для выбора максимальной даты created_at для каждого user_id
-        query = (
+        subquery = (
             select(
                 Payments.user_id,
                 func.max(Payments.created_at).label('max_created_at')
-            )
-            .where(
+            ).where(
                 and_(
                     Payments.event == 'payment',
                     Payments.status == 'succeeded'
                 )
-            )
-            .group_by(Payments.user_id)
-            .having(
-                text("max(created_at) < (CURRENT_DATE - INTERVAL '1 month')")
+            ).group_by(Payments.user_id)
+        ).subquery()
+
+        # Основной запрос, который присоединяет результаты подзапроса и фильтрует записи по максимальной дате
+        # и проверяет, что максимальная дата меньше текущей даты на месяц
+        query = (
+            select(Payments)
+            .join(subquery, and_(
+                Payments.user_id == subquery.c.user_id,
+                Payments.created_at == subquery.c.max_created_at
+            ))
+            .where(
+                Payments.created_at + text("interval '1 month'") < func.now()
             )
         )
 
