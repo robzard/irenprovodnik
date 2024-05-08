@@ -35,7 +35,7 @@ SessionLocal = sessionmaker(bind=engine)
 #         payments = result.scalars().all()
 #         return payments
 
-def get_latest_successful_payments():
+async def get_latest_successful_payments():
     with SessionLocal() as session:
         # Подзапрос для выбора максимальной даты created_at для каждого user_id
         subquery = (

@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 async def my_daily_task():
-    payments = get_latest_successful_payments()
+    payments = await get_latest_successful_payments()
     logging.info(f'len_payments: {len(payments)}')
     for payment in payments:
         logging.info(f'user_id: {payment.user_id}')
