@@ -1,3 +1,5 @@
+import asyncio
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
@@ -32,3 +34,8 @@ scheduler.add_job(my_daily_task, 'interval', minutes=1)
 
 # Запускаем планировщик
 scheduler.start()
+
+try:
+    asyncio.get_event_loop().run_forever()
+except (KeyboardInterrupt, SystemExit):
+    pass
