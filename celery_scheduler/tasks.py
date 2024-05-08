@@ -1,3 +1,4 @@
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 import logging
@@ -7,7 +8,7 @@ from db.requests import get_latest_successful_payments
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-def my_daily_task():
+async def my_daily_task():
     payments = get_latest_successful_payments()
     logging.info(f'len_payments: {len(payments)}')
     for payment in payments:
@@ -16,7 +17,8 @@ def my_daily_task():
 
 
 # Создаем планировщик
-scheduler = BlockingScheduler()
+scheduler = AsyncIOScheduler()
+
 
 # Получаем текущее время
 now = datetime.now()
