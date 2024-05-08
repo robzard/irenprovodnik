@@ -45,21 +45,25 @@ def get_latest_successful_payments():
             ).where(
                 and_(
                     Payments.event == 'payment',
-                    Payments.status == 'succeeded',
-                    Payments.created_at + text("interval '1 month'") < func.now()
+                    Payments.status == 'succeeded'
                 )
             ).group_by(Payments.user_id)
         ).subquery()
 
         # Основной запрос, который присоединяет результаты подзапроса и фильтрует записи по максимальной дате
+        # и проверяет, что максимальная дата меньше текущей даты на месяц
         query = (
             select(Payments)
             .join(subquery, and_(
                 Payments.user_id == subquery.c.user_id,
                 Payments.created_at == subquery.c.max_created_at
             ))
+            .where(
+                Payments.created_at + text("interval '1 month'") < func.now()
+            )
         )
 
         result = session.execute(query)
         payments = result.scalars().all()
         return payments
+
