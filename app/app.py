@@ -156,7 +156,7 @@ async def yookassa_notification():
     data = request.json
     logger.info(f'yookassa_notification - {str(data)}')
     payment = await save_payment(data)
-    await update_payment_date(int(payment.user_id), payment.updated_at)
+    await update_payment_date(payment)
     await send_telegram_message(payment)
     response = make_response(jsonify({'status': 'success'}))
     response.status_code = 200
