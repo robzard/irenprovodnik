@@ -1,12 +1,11 @@
 import asyncio
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 import logging
 import utils.telegram_bot as tg
 
-from db.requests import get_users_subscription_expired
+from db.requests import get_users_subscription_expired, set_subscription_false
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -16,6 +15,7 @@ async def my_daily_task():
     logging.info(f'users_payments: {len(users)}')
     for user in users:
         logging.info(f'user_id: {user.user_id}')
+        await set_subscription_false(user)
         await tg.subscription_expired(user.user_id)
     logging.info("Выполнение задачи: %s", datetime.now())
 
@@ -23,16 +23,8 @@ async def my_daily_task():
 # Создаем планировщик
 scheduler = AsyncIOScheduler()
 
-
-# Получаем текущее время
-now = datetime.now()
-minute = now.minute + 1  # Настроим запуск на следующую минуту
-if minute == 60:
-    minute = 0  # Обрабатываем переход через час
-
-# Добавляем задачу, которая будет выполняться в ближайшую минуту
-scheduler.add_job(my_daily_task, 'cron', hour=13, minute=1)
-# scheduler.add_job(my_daily_task, 'interval', minutes=1)
+# scheduler.add_job(my_daily_task, 'cron', hour=13, minute=1)
+scheduler.add_job(my_daily_task, 'interval', minutes=1)
 
 # Запускаем планировщик
 scheduler.start()

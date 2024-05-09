@@ -29,30 +29,25 @@ AsyncSession: sessionmaker[AsyncSession] = sessionmaker(
 )
 
 
-# def get_subscriptions_expired():
-#     with SessionLocal() as session:
-#         query = select(Payments).where(
-#             and_(
-#                 Payments.event == 'payment',
-#                 Payments.status == 'succeeded',
-#                 Payments.created_at > func.now()
-#             )
-#         )
-#         result = session.execute(query)
-#         payments = result.scalars().all()
-#         return payments
-
 async def get_users_subscription_expired():
     async with AsyncSession() as session:
         one_month_ago = datetime.utcnow() - timedelta(days=30)
-        # Формируем запрос на выборку пользователей
         result = await session.execute(
             select(User).
             where(
-                User.subscription.is_(True),  # Проверяем, что подписка активна
-                User.payment_date < one_month_ago  # и что последний платёж был более месяца назад
+                User.subscription.is_(True),
+                User.payment_date < one_month_ago
             )
         )
-        # Получаем список пользователей
         users = result.scalars().all()
         return users
+
+
+async def set_subscription_false(user: User):
+    async with AsyncSession() as session:
+        await session.execute(
+            update(User).
+            where(User.user_id == int(user.user_id)).
+            values(subscription=False)
+        )
+        await session.commit()
