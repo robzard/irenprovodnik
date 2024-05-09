@@ -126,4 +126,19 @@ async def save_payment(yookassa_response: dict):
         payment = Payments(user_id=user_id, event=event, status=status, payment_id=payment_id, description=description, amount=amount, income_amount=income_amount, reason=reason, response=response)
         session.add(payment)
         await session.commit()
+    await update_payment_date(payment.user_id, payment.updated_at)
     return payment
+
+
+async def update_payment_date(user_id, date):
+    async with AsyncSession() as session:
+        result = await session.execute(select(User).filter(User.user_id == user_id))
+        user = result.scalars().first()
+        if user:
+            # Асинхронно обновляем время в поле updated_at
+            await session.execute(
+                update(User).
+                where(User.user_id == user_id).
+                values(payment_date=date)
+            )
+            await session.commit()

@@ -1,5 +1,5 @@
 import sqlalchemy as sa
-from sqlalchemy import ForeignKey, text, BigInteger, String, JSON, Text, Boolean
+from sqlalchemy import ForeignKey, text, BigInteger, String, JSON, Text, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from typing import Annotated, Any
 
