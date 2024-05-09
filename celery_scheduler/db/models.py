@@ -23,7 +23,7 @@ class User(Base):
     first_name: Mapped[str | None] = mapped_column(String, nullable=True)
     last_name: Mapped[str | None] = mapped_column(String, nullable=True)
     phone_number: Mapped[str | None] = mapped_column(String, nullable=True)
-    payment_date: Mapped[datetime | None] = mapped_column(TIMESTAMP, nullable=True)
+    payment_date = Annotated[datetime, mapped_column(server_default=text("TIMEZONE('Asia/Yekaterinburg', now())"))]
     language_code: Mapped[str | None] = mapped_column(String, nullable=True)
     is_admin: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
 
