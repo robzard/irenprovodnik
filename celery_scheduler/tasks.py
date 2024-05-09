@@ -4,6 +4,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 import logging
+import utils.telegram_bot as tg
 
 from db.requests import get_latest_successful_payments
 
@@ -15,6 +16,7 @@ async def my_daily_task():
     logging.info(f'len_payments: {len(payments)}')
     for payment in payments:
         logging.info(f'user_id: {payment.user_id}')
+        await tg.subscription_expired(payment.user_id)
     logging.info("Выполнение задачи: %s", datetime.now())
 
 
