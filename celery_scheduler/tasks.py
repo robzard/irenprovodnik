@@ -31,8 +31,8 @@ if minute == 60:
     minute = 0  # Обрабатываем переход через час
 
 # Добавляем задачу, которая будет выполняться в ближайшую минуту
-# scheduler.add_job(my_daily_task, 'cron', hour=now.hour, minute=minute)
-scheduler.add_job(my_daily_task, 'interval', minutes=1)
+scheduler.add_job(my_daily_task, 'cron', hour=12, minute=10)
+# scheduler.add_job(my_daily_task, 'interval', minutes=1)
 
 # Запускаем планировщик
 scheduler.start()
