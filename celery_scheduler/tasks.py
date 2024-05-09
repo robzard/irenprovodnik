@@ -6,17 +6,17 @@ from datetime import datetime
 import logging
 import utils.telegram_bot as tg
 
-from db.requests import get_latest_successful_payments
+from db.requests import get_users_subscription_expired
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 async def my_daily_task():
-    payments = await get_latest_successful_payments()
-    logging.info(f'len_payments: {len(payments)}')
-    for payment in payments:
-        logging.info(f'user_id: {payment.user_id}')
-        await tg.subscription_expired(payment.user_id)
+    users = await get_users_subscription_expired()
+    logging.info(f'users_payments: {len(users)}')
+    for user in users:
+        logging.info(f'user_id: {user.user_id}')
+        await tg.subscription_expired(user.user_id)
     logging.info("Выполнение задачи: %s", datetime.now())
 
 
@@ -31,7 +31,7 @@ if minute == 60:
     minute = 0  # Обрабатываем переход через час
 
 # Добавляем задачу, которая будет выполняться в ближайшую минуту
-scheduler.add_job(my_daily_task, 'cron', hour=12, minute=10)
+scheduler.add_job(my_daily_task, 'cron', hour=13, minute=1)
 # scheduler.add_job(my_daily_task, 'interval', minutes=1)
 
 # Запускаем планировщик

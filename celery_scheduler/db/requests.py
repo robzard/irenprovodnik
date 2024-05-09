@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Tuple, Optional
 
 from aiogram.types import Update
@@ -42,34 +42,17 @@ AsyncSession: sessionmaker[AsyncSession] = sessionmaker(
 #         payments = result.scalars().all()
 #         return payments
 
-async def get_latest_successful_payments():
+async def get_users_subscription_expired():
     async with AsyncSession() as session:
-        # Подзапрос для выбора максимальной даты created_at для каждого user_id
-        subquery = (
-            select(
-                Payments.user_id,
-                func.max(Payments.created_at).label('max_created_at')
-            ).where(
-                and_(
-                    Payments.event == 'payment',
-                    Payments.status == 'succeeded'
-                )
-            ).group_by(Payments.user_id)
-        ).subquery()
-
-        # Основной запрос, который присоединяет результаты подзапроса и фильтрует записи по максимальной дате
-        # и проверяет, что максимальная дата меньше текущей даты на месяц
-        query = (
-            select(Payments)
-            .join(subquery, and_(
-                Payments.user_id == subquery.c.user_id,
-                Payments.created_at == subquery.c.max_created_at
-            ))
-            .where(
-                Payments.created_at + text("interval '1 month'") < func.now()
+        one_month_ago = datetime.utcnow() - timedelta(days=30)
+        # Формируем запрос на выборку пользователей
+        result = await session.execute(
+            select(User).
+            where(
+                User.subscription.is_(True),  # Проверяем, что подписка активна
+                User.payment_date < one_month_ago  # и что последний платёж был более месяца назад
             )
         )
-
-        result = await session.execute(query)
-        payments = result.scalars().all()
-        return payments
+        # Получаем список пользователей
+        users = result.scalars().all()
+        return users
