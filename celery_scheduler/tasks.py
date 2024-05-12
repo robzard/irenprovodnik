@@ -12,15 +12,18 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 async def my_daily_task():
     users = await get_users_subscription_expired()
-    logging.info(f'users_payments: {len(users)}')
+    logging.info(f'get_users_subscription_expired: {len(users)}')
     for user in users:
         logging.info(f'user_id: {user.user_id}')
-        await set_subscription_false(user)
-        await tg.subscription_expired(user.user_id)
+        if user.auto_payment:
+            await tg.renew_subscription(user.user_id)
+            await tg.subscription_extended(user.user_id)
+        else:
+            await set_subscription_false(user)
+            await tg.subscription_expired(user.user_id)
     logging.info("Выполнение задачи: %s", datetime.now())
 
 
-# Создаем планировщик
 scheduler = AsyncIOScheduler()
 
 # scheduler.add_job(my_daily_task, 'cron', hour=13, minute=1)

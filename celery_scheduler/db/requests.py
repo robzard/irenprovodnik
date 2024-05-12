@@ -7,7 +7,7 @@ from aiogram.types import Update
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.future import select
-from sqlalchemy import create_engine, update, and_, func
+from sqlalchemy import create_engine, update, and_, func, desc
 from sqlalchemy.sql.expression import text
 
 from sqlalchemy_utils import database_exists, create_database
@@ -51,3 +51,12 @@ async def set_subscription_false(user: User):
             values(subscription=False)
         )
         await session.commit()
+
+
+async def get_last_payment_id(user_id: int):
+    async with AsyncSession() as session:
+        result = await session.execute(
+            select(Payments.payment_id).filter(Payments.user_id == user_id).order_by(desc(Payments.created_at)).limit(1)
+        )
+        last_payment: Payments = result.scalars().first()
+        return last_payment.payment_id
