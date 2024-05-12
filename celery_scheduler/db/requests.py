@@ -58,5 +58,5 @@ async def get_last_payment_id(user_id: int):
         result = await session.execute(
             select(Payments.payment_id).filter(Payments.user_id == user_id).order_by(desc(Payments.created_at)).limit(1)
         )
-        last_payment: Payments = result.scalars().first()
-        return last_payment.payment_id
+        last_payment = result.scalars().first()
+        return last_payment
