@@ -53,6 +53,16 @@ async def set_subscription_false(user: User):
         await session.commit()
 
 
+async def set_subscription_true(user: User):
+    async with AsyncSession() as session:
+        await session.execute(
+            update(User).
+            where(User.user_id == int(user.user_id)).
+            values(subscription=True)
+        )
+        await session.commit()
+
+
 async def get_last_payment_id(user_id: int):
     async with AsyncSession() as session:
         result = await session.execute(

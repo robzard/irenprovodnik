@@ -5,7 +5,7 @@ from datetime import datetime
 import logging
 import utils.telegram_bot as tg
 
-from db.requests import get_users_subscription_expired, set_subscription_false
+from db.requests import get_users_subscription_expired, set_subscription_false, set_subscription_true
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -17,7 +17,7 @@ async def my_daily_task():
         logging.info(f'user_id: {user.user_id}')
         if user.auto_payment:
             await tg.renew_subscription(user.user_id)
-            await tg.subscription_extended(user.user_id)
+            await set_subscription_true(user)
         else:
             await set_subscription_false(user)
             await tg.subscription_expired(user.user_id)

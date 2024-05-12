@@ -1,4 +1,9 @@
-from yookassa import Payment
+import os
+
+from yookassa import Configuration, Payment
+
+Configuration.account_id = os.getenv('YOOKASSA_SHOP_ID')
+Configuration.secret_key = os.getenv('YOOKASSA_SECRET_KEY')
 
 
 async def create_recurring_payment(user_id, payment_id):
@@ -9,12 +14,9 @@ async def create_recurring_payment(user_id, payment_id):
         },
         'capture': True,
         'description': 'Ежемесячная подписка на канал',
-        'payment_method_id': '2dc597a4-000f-5000-9000-139de27893c0',
+        'payment_method_id': payment_id,
         'metadata': {
             'telegram_user_id': user_id
         }
     })
     return payment
-
-
-
