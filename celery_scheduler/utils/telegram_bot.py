@@ -36,14 +36,15 @@ async def renew_subscription(user_id):
     last_payment_id = await get_last_payment_id(user_id)
     payment = await create_recurring_payment(user_id, last_payment_id)
 
-    while payment.status != 'succeeded':
-        payment = Payment.find_one(last_payment_id)
+    while payment.status not in ('succeeded', 'canceled'):
+        payment = Payment.find_one(payment.id)
 
     try:
         if payment.status == 'succeeded':
             await bot.send_message(user_id, "Ваша подписка автоматически продлена на месяц.")
         else:
             await bot.send_message(user_id, "Не удалось продлить подписку. Пожалуйста, попробуйте снова.")
+        return payment
     except Exception as ex:
         logging.warning(f'Пользователю {user_id} не удалось отправить сообщение - {str(ex)}')
     finally:

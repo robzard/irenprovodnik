@@ -88,11 +88,11 @@ async def create_recurring_payment(payment_method_id):
 @dp.message(Command('renew_subscription'))
 async def renew_subscription(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    payment_method_id = data.get('payment_id')
+    payment_method_id = "2dd2d6dd-000f-5000-9000-1ded3f6ca6eb"
     payment = await create_recurring_payment(payment_method_id)
 
     while payment.status != 'succeeded':
-        payment = Payment.find_one(payment_method_id)
+        payment = Payment.find_one(payment.id)
 
     if payment.status == 'succeeded':
         await message.answer("Ваша подписка успешно продлена на следующий месяц.")

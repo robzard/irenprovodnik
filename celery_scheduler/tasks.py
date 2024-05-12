@@ -16,8 +16,9 @@ async def my_daily_task():
     for user in users:
         logging.info(f'user_id: {user.user_id}')
         if user.auto_payment:
-            await tg.renew_subscription(user.user_id)
-            await set_subscription_true(user)
+            payment = await tg.renew_subscription(user.user_id)
+            if payment.status == 'succeeded':
+                await set_subscription_true(user)
         else:
             await set_subscription_false(user)
             await tg.subscription_expired(user.user_id)

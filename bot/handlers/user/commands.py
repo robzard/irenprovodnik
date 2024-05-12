@@ -73,7 +73,7 @@ async def create_recurring_payment():
 async def renew_subscription(message: types.Message):
     payment = await create_recurring_payment()
 
-    while payment.status != 'succeeded':
+    while payment.status not in ('succeeded', 'canceled'):
         payment = Payment.find_one('2dc597a4-000f-5000-9000-139de27893c0')
 
     if payment.status == 'succeeded':
