@@ -3,7 +3,7 @@ import os
 from aiogram import Bot
 
 
-async def send_telegram_message(payment: Payments):
+async def send_telegram_message_succeeded(payment: Payments):
     bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
     description_type = {'Первоначальная подписка на канал': 'Оплата подписки', 'Ежемесячная подписка на канал': 'Продление подписки'}
 
@@ -15,3 +15,4 @@ async def send_telegram_message(payment: Payments):
             await bot.send_message(payment.user_id, text)
     finally:
         await bot.session.close()
+

@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncSessio
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from utils.telegram_bot import send_telegram_message
+from utils.telegram_bot import send_telegram_message_succeeded
 from data_base.requests import save_payment, update_payment_date
 from data_base.db import GrafanaManager
 
@@ -156,8 +156,10 @@ async def yookassa_notification():
     data = request.json
     logger.info(f'yookassa_notification - {str(data)}')
     payment = await save_payment(data)
-    await update_payment_date(payment)
-    await send_telegram_message(payment)
+    if payment.status == "succeeded":
+        await update_payment_date(payment)
+        await send_telegram_message_succeeded(payment)
+
     response = make_response(jsonify({'status': 'success'}))
     response.status_code = 200
     return response
