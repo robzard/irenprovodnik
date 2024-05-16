@@ -7,11 +7,12 @@ from datetime import datetime
 import logging
 import utils.telegram_bot as tg
 
-# Отладочный вывод для проверки PYTHONPATH
+# Проверка текущего PYTHONPATH
 print("Current PYTHONPATH:", sys.path)
 
-# Добавление пути к common
-sys.path.append('/common')
+# Явное добавление пути к common, если он не установлен
+if '/common' not in sys.path:
+    sys.path.append('/common')
 
 # Проверка обновленного PYTHONPATH
 print("Updated PYTHONPATH:", sys.path)
