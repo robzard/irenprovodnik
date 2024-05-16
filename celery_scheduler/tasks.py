@@ -3,9 +3,7 @@ import os
 import sys
 
 # Явное добавление пути к common
-# sys.path.insert(0, '/common')
-sys.path.append(os.path.abspath('/app'))
-sys.path.append(os.path.abspath('/common'))
+sys.path.insert(0, '/common')
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime
