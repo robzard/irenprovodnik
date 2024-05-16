@@ -5,7 +5,7 @@ from datetime import datetime
 import logging
 import utils.telegram_bot as tg
 
-from db.requests import get_users_subscription_expired, set_subscription_false, set_subscription_true
+from common.db.requests import get_users_subscription_expired, set_subscription_false, set_subscription_true
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

@@ -10,10 +10,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine
 
-from db.requests import get_admins
+from common.db.requests import get_admins
 from handlers.user import include_routers
 from config_data.config import load_config
-from db.db import BaseManager
+from common.db.models import BaseManager
 from middlewares.middlewares import DatabaseSessionMiddleware, ThrottlingMiddleware, CallbackThrottlingMiddleware
 
 from aiohttp import web
