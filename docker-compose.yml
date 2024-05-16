@@ -217,7 +217,7 @@ services:
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: pal-vitek1111@mail.ru
-      PGADMIN_DEFAULT_PASSWORD: Monster7816361189!
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
