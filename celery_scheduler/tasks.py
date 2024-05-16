@@ -11,8 +11,7 @@ import utils.telegram_bot as tg
 print("Current PYTHONPATH:", sys.path)
 
 # Явное добавление пути к common, если он не установлен
-if '/common' not in sys.path:
-    sys.path.append('/common')
+sys.path.append('/common')
 
 # Проверка обновленного PYTHONPATH
 print("Updated PYTHONPATH:", sys.path)
