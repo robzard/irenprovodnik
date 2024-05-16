@@ -126,6 +126,7 @@ services:
       - BOT_TOKEN=${BOT_TOKEN}
       - YOOKASSA_SHOP_ID=${YOOKASSA_SHOP_ID}
       - YOOKASSA_SECRET_KEY=${YOOKASSA_SECRET_KEY}
+      - PYTHONPATH=/app:/common
     depends_on:
       - redis
     volumes:
