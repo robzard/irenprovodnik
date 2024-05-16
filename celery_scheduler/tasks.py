@@ -2,19 +2,15 @@ import asyncio
 import os
 import sys
 
+# Явное добавление пути к common
+sys.path.insert(0, '/common')
+
+print("Updated PYTHONPATH:", sys.path)
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime
 import logging
 import utils.telegram_bot as tg
-
-# Явное добавление пути к common
-if '/common' not in sys.path:
-    sys.path.append('/common')
-
-# Проверка обновленного PYTHONPATH
-print("Updated PYTHONPATH:", sys.path)
-
-
 
 from common.db.requests import get_users_subscription_expired, set_subscription_false, set_subscription_true
 
