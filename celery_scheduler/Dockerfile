@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 ENV PYTHONPATH="/common:/app:${PYTHONPATH}"
 
-CMD ["python3", "tasks.py"]
+CMD ["python", "tasks.py"]
