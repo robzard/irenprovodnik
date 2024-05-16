@@ -1,5 +1,8 @@
 import logging
 import sys
+
+sys.path.insert(0, '/common')
+
 from logging.handlers import TimedRotatingFileHandler
 
 from aiogram import Bot, Dispatcher
