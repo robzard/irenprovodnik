@@ -8,7 +8,7 @@ from yookassa import Configuration, Payment
 
 from config_data.config import load_config
 
-from yookassa_payment.yookassa_handler import YookassaHandler
+from common.yookassa_payment.yookassa_handler import YookassaHandler
 
 from keyboards.user import inline
 

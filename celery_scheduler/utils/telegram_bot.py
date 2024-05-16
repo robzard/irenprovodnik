@@ -3,8 +3,8 @@ import os
 from aiogram import Bot
 from yookassa import Payment
 
-from db.requests import get_last_payment_id
-from utils.yookassa_payment import create_recurring_payment
+from common.db.requests import get_last_payment_id
+from common.yookassa_payment.yookassa_handler import YookassaHandler
 
 
 async def subscription_expired(user_id):
@@ -33,9 +33,10 @@ async def subscription_extended(user_id):
 
 async def renew_subscription(user_id):
     bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
+    yh = YookassaHandler()
     try:
         last_payment_id = await get_last_payment_id(user_id)
-        payment = await create_recurring_payment(user_id, last_payment_id)
+        payment = await yh.create_recurring_payment(user_id, last_payment_id)
 
         while payment.status not in ('succeeded', 'canceled'):
             payment = Payment.find_one(payment.id)

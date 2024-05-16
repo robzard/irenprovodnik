@@ -37,14 +37,17 @@ class YookassaHandler:
         self.payment_id: str = payment.id
         return payment.confirmation.confirmation_url
 
-    async def create_recurring_payment(self, payment_method_id):
-        payment = Payment.create({
+    async def create_recurring_payment(self, user_id, payment_id):
+        self.payment = Payment.create({
             'amount': {
                 'value': '100.00',
                 'currency': 'RUB'
             },
             'capture': True,
             'description': 'Ежемесячная подписка на канал',
-            'payment_method_id': payment_method_id  # Используем сохраненный payment_method_id
+            'payment_method_id': payment_id,
+            'metadata': {
+                'telegram_user_id': user_id
+            }
         })
-        return payment
+        return self.payment

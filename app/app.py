@@ -12,8 +12,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from utils.telegram_bot import send_telegram_message_succeeded
-from data_base.requests import save_payment, update_payment_date
-from data_base.db import GrafanaManager
+from common.db.requests import save_payment, update_payment_date
 
 db_url = f"postgresql+psycopg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DATABASE')}?options=-c%20timezone%3DAsia/Yekaterinburg"
 engine: AsyncEngine = create_async_engine(db_url)
@@ -166,9 +165,10 @@ async def yookassa_notification():
 
 
 async def add_log_grafana(user_id: int, handler_name: str, selected_course: str = None):
-    async with AsyncSession() as session:
-        db = GrafanaManager(session)
-        await db.log_grafana_after(user_id, handler_name, selected_course)
+    pass
+    # async with AsyncSession() as session:
+    #     db = GrafanaManager(session)
+    #     await db.log_grafana_after(user_id, handler_name, selected_course)
 
 
 if __name__ == '__main__':

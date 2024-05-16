@@ -1,4 +1,4 @@
-from data_base.models import Payments
+from common.db.models import Payments
 import os
 from aiogram import Bot
 

@@ -6,5 +6,6 @@ COPY . /app
 
 RUN pip install -r requirements.txt
 
+ENV PYTHONPATH="/common:${PYTHONPATH}"
 
 CMD ["python", "tasks.py"]

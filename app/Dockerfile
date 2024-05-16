@@ -22,5 +22,7 @@ COPY . /app
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
+ENV PYTHONPATH="/common:${PYTHONPATH}"
+
 # Define environment variable
 ENV FLASK_ENV=production
