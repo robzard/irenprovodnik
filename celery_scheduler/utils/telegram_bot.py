@@ -39,6 +39,7 @@ async def renew_subscription(user_id):
 
         while payment.status not in ('succeeded', 'canceled'):
             payment = Payment.find_one(payment.id)
+        return payment
     except Exception as ex:
         logging.error(f'Пользователю {user_id} не автоматически списать деньги - {str(ex)}')
     finally:
