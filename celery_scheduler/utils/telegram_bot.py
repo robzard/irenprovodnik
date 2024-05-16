@@ -39,6 +39,9 @@ async def renew_subscription(user_id):
 
         while payment.status not in ('succeeded', 'canceled'):
             payment = Payment.find_one(payment.id)
+
+        if payment.status != 'succeeded':
+            await bot.send_message(user_id, "Не удалось продлить подписку. Пожалуйста, попробуйте снова.")
         return payment
     except Exception as ex:
         logging.error(f'Пользователю {user_id} не автоматически списать деньги - {str(ex)}')
