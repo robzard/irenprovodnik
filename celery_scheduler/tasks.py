@@ -3,8 +3,8 @@ import os
 import sys
 
 # Явное добавление пути к common
-sys.path.insert(0, '/common')
-
+# sys.path.insert(0, '/common')
+sys.path.extend([os.path.abspath('/common'), os.path.abspath('/app')])
 print("Updated PYTHONPATH:", sys.path)
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
