@@ -1,5 +1,5 @@
 import sqlalchemy as sa
-from sqlalchemy import ForeignKey, text, BigInteger, String, JSON, Text, Boolean
+from sqlalchemy import ForeignKey, text, BigInteger, String, JSON, Text, Boolean, TIMESTAMP
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from typing import Annotated, Any
 
@@ -23,6 +23,9 @@ class User(Base):
     first_name: Mapped[str | None] = mapped_column(String, nullable=True)
     last_name: Mapped[str | None] = mapped_column(String, nullable=True)
     phone_number: Mapped[str | None] = mapped_column(String, nullable=True)
+    payment_date: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"), nullable=True)
+    subscription: Mapped[bool | None] = mapped_column(Boolean, default=False)
+    auto_payment: Mapped[bool | None] = mapped_column(Boolean, default=False)
     language_code: Mapped[str | None] = mapped_column(String, nullable=True)
     is_admin: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
 
