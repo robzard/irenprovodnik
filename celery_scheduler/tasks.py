@@ -7,14 +7,13 @@ from datetime import datetime
 import logging
 import utils.telegram_bot as tg
 
-# Проверка текущего PYTHONPATH
-print("Current PYTHONPATH:", sys.path)
-
-# Явное добавление пути к common, если он не установлен
-sys.path.append('/common')
+# Явное добавление пути к common
+if '/common' not in sys.path:
+    sys.path.append('/common')
 
 # Проверка обновленного PYTHONPATH
 print("Updated PYTHONPATH:", sys.path)
+
 
 
 from common.db.requests import get_users_subscription_expired, set_subscription_false, set_subscription_true
