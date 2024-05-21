@@ -10,6 +10,4 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Скопируйте исходный код бота в контейнер
 COPY . .
 
-ENV PYTHONPATH="/bot:/common"
-
 CMD ["python", "bot.py"]
