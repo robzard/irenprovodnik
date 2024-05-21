@@ -25,7 +25,7 @@ EXPOSE 5000
 # Создайте символическую ссылку для common
 RUN ln -s /common /app/common
 
-ENV PYTHONPATH=/app:/common
+ENV PYTHONPATH="/app:/common"
 
 # Define environment variable
 ENV FLASK_ENV=production
