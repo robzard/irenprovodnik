@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import datetime, timedelta
 from typing import Tuple, Optional
@@ -213,3 +214,37 @@ async def get_last_payment_id(user_id: int):
         )
         last_payment = result.scalars().first()
         return last_payment
+
+
+class BaseManager:
+
+    def __init__(self, session=None):
+        self.session = session
+
+    async def close_session(self):
+        if self.session:
+            await self.session.close()
+
+    async def execute_query(self, query):
+        return await self.session.execute(query)
+
+    async def add(self, obj):
+        self.session.add(obj)
+        await self.session.commit()
+
+    @staticmethod
+    def get_async_session() -> sessionmaker[AsyncSession]:
+        return AsyncSession
+
+    @staticmethod
+    def create_database_and_tables(engine):
+        # Создание базы данных, если она не существует
+        sync_engine = engine
+        if not database_exists(sync_engine.url):
+            create_database(sync_engine.url)
+
+        # Создание таблиц, если они не существуют
+        with engine.begin() as conn:
+            # Base.metadata.drop_all(conn)
+            logging.debug(f'Создание таблиц')
+            Base.metadata.create_all(conn)

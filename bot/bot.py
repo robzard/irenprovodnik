@@ -1,7 +1,7 @@
 import logging
 import sys
 
-sys.path.insert(0, '/common')
+# sys.path.insert(0, '/common')
 
 from logging.handlers import TimedRotatingFileHandler
 
@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngin
 from common.db.requests import get_admins
 from handlers.user import include_routers
 from config_data.config import load_config
-from common.db.models import BaseManager
+from common.db.requests import BaseManager
 from middlewares.middlewares import DatabaseSessionMiddleware, ThrottlingMiddleware, CallbackThrottlingMiddleware
 
 from aiohttp import web
