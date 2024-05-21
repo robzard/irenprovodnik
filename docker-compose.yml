@@ -29,6 +29,7 @@ services:
       - DOMEN_WEB_APP=${DOMEN_WEB_APP}
       - YOOKASSA_SHOP_ID=${YOOKASSA_SHOP_ID}
       - YOOKASSA_SECRET_KEY=${YOOKASSA_SECRET_KEY}
+      - PYTHONPATH=/app:/common
     volumes:
       - ./app:/app
       - ./common:/common

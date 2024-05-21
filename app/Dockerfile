@@ -22,7 +22,10 @@ COPY . /app
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-ENV PYTHONPATH="/common:${PYTHONPATH}"
+# Создайте символическую ссылку для common
+RUN ln -s /common /app/common
+
+ENV PYTHONPATH=/app:/common
 
 # Define environment variable
 ENV FLASK_ENV=production
