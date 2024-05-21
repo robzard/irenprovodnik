@@ -16,7 +16,7 @@ class YookassaHandler:
         self.payment_id = None
         self.payment = None
 
-    def create_first_payment(self) -> str:
+    def create_first_payment(self, user_id) -> str:
         payment: PaymentResponse = Payment.create({
             'amount': {
                 'value': '100.00',
@@ -31,6 +31,10 @@ class YookassaHandler:
             'save_payment_method': True,
             'payment_method_data': {
                 'type': 'bank_card'
+            },
+            'metadata': {
+                'telegram_user_id': user_id,
+                'qwe': 'qwe'
             }
         })
 

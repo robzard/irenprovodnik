@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngin
 
 from handlers.user import include_routers
 from config_data.config import load_config
-from db.db import BaseManager
+from common.db.requests import BaseManager
 from middlewares.middlewares import DatabaseSessionMiddleware, ThrottlingMiddleware, CallbackThrottlingMiddleware
 
 TEST_MODE = True if sys.argv[-1] == 'local_testing' else False
