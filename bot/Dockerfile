@@ -10,4 +10,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Скопируйте исходный код бота в контейнер
 COPY . .
 
+# Создайте символическую ссылку для common
+RUN ln -s /common /bot/common
+
+ENV PYTHONPATH=/bot:/common
+
 CMD ["python", "bot.py"]
