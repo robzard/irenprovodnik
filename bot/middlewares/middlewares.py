@@ -6,8 +6,8 @@ from aiogram.types import Update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from db.models import User
-from db.requests import get_user_data, create_user, log_grafana_after
+from common.db.models import User
+from common.db.requests import get_user_data, create_user
 from states.states import FsmData
 from utils.utils import MessageEditor, get_event_text
 
@@ -59,7 +59,8 @@ class DatabaseSessionMiddleware(BaseMiddleware):
 
     @staticmethod
     async def log_grafana(event: Update, fsm_data: FsmData, before_handler_name: str):
-        await log_grafana_after(event, fsm_data, before_handler_name, 'INFO')
+        pass
+        # await log_grafana_after(event, fsm_data, before_handler_name, 'INFO')
 
     @staticmethod
     async def get_before_handler(data: Dict[str, Any], fsm_data: FsmData) -> str:
