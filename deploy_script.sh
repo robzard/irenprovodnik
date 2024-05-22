@@ -57,8 +57,7 @@ fi
 git pull
 
 # Дополнительные команды для деплоя, например:
-docker compose build
-docker compose up -d
+docker compose up --build -d
 
 
 # Проверка наличия сертификатов
