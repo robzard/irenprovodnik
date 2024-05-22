@@ -245,6 +245,6 @@ class BaseManager:
 
         # Создание таблиц, если они не существуют
         with engine.begin() as conn:
-            # Base.metadata.drop_all(conn)
+            Base.metadata.drop_all(conn)
             logging.debug(f'Создание таблиц')
             Base.metadata.create_all(conn)
