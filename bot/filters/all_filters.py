@@ -4,8 +4,8 @@ import re
 from aiogram import types
 from aiogram.filters import Filter
 
-from db.models import User
-from db.requests import get_admins
+from common.db.models import User
+from common.db.requests import get_admins
 from utils.dict_buttons import buttons_questions
 
 course_names = {'Стиль для себя': 'course_style_for_me',
