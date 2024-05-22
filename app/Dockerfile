@@ -22,8 +22,8 @@ COPY . /app
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Создайте символическую ссылку для common
-RUN ln -s /common /app/common
+# Создайте символическую ссылку для common (не работает почему то)
+#RUN ln -s /common /app/common
 
 ENV PYTHONPATH="/app:/common"
 
