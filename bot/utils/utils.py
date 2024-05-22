@@ -10,7 +10,6 @@ from aiogram.types import FSInputFile, Message
 from config_data.config import load_config
 from keyboards.user.inline import questions_back_menu
 from keyboards.user.reply import create_keyboard
-from states.states import FsmData
 from utils.dict_buttons import buttons_questions
 # from custom_logger.logger import logger
 import logging
@@ -165,9 +164,9 @@ def get_chat_id_from_event(event: Update) -> int:
 
 
 class MessageEditor:
-    def __init__(self, bot: Bot, fsm_data: FsmData):
+    def __init__(self, bot: Bot, state: FSMContext):
         self.bot = bot
-        self.fsm_data = fsm_data
+        self.state = state
 
     async def handle_message(self, message: types.Message | types.InlineQueryResult, **kwargs):
         if message.text == '/start':
@@ -181,7 +180,7 @@ class MessageEditor:
         await self.send_message(message, **data)
 
     async def edit_or_resend_message(self, message: types.Message | types.InlineQueryResult, **kwargs):
-        edit_message_id = self.fsm_data.edit_message
+        edit_message_id = self.state.edit_message
 
         if edit_message_id:
             try:
@@ -221,7 +220,7 @@ class MessageEditor:
         await self.update_state(edit_message, **kwargs)
 
     async def extract_message_data(self, photo_path=None, course_name_id=None, photo=False, text=None, reply_markup=None, **kwargs):
-        course_name_id = course_name_id or self.fsm_data.course_name_id or None
+        course_name_id = course_name_id or self.state.course_name_id or None
         image_path = photo_path or (f'./static/images/{course_name_id}.jpg' if course_name_id else None)
         edit = kwargs.get('edit')
 
@@ -247,7 +246,7 @@ class MessageEditor:
         return {'send_args': send_args, 'update_message_data': kwargs}
 
     async def update_state(self, message, **kwargs):
-        await self.fsm_data.update_data(edit_message=message.message_id, **kwargs)
+        await self.state.update_data(edit_message=message.message_id, **kwargs)
 
 
 def extract_event_data(event: Update) -> CallbackQuery | Message | None:
@@ -270,7 +269,7 @@ def get_event_text(event: Update) -> str:
     return message_text
 
 
-async def delete_need_messages(bot: Bot, chat_id: int, fsm_data: FsmData, start=False):
+async def delete_need_messages(bot: Bot, chat_id: int, state: FSMContext, start=False):
     logging.debug('Удаление сообщений')
 
     async def delete_messages(message_ids):
@@ -283,35 +282,35 @@ async def delete_need_messages(bot: Bot, chat_id: int, fsm_data: FsmData, start=
         else:
             logging.debug('Сообщения для удаления отсутствуют')
 
-    await delete_messages(fsm_data.msg_need_delete)
-    await fsm_data.update_data(msg_need_delete=[])
+    await delete_messages(state.msg_need_delete)
+    await state.update_data(msg_need_delete=[])
 
     if start:
         logging.debug('Удаление сообщений при запуске по msg_need_delete_on_start')
-        await delete_messages(fsm_data.msg_need_delete_on_start)
-        await fsm_data.update_data(msg_need_delete_on_start=[])
+        await delete_messages(state.msg_need_delete_on_start)
+        await state.update_data(msg_need_delete_on_start=[])
 
     return []
 
 
-async def delete_category_message_id(message, bot, fsm_data: FsmData):
-    if fsm_data.category_message_id:
+async def delete_category_message_id(message, bot, state: FSMContext):
+    if state.category_message_id:
         try:
-            await bot.delete_message(message.chat.id, fsm_data.category_message_id)
-            logging.debug(f'Сообщение {fsm_data.category_message_id} успешно удалено')
+            await bot.delete_message(message.chat.id, state.category_message_id)
+            logging.debug(f'Сообщение {state.category_message_id} успешно удалено')
         except TelegramBadRequest:
-            fsm_data.category_message_id = None
-            logging.warning(f'Ошибка при удалении сообщения {fsm_data.category_message_id}')
+            state.category_message_id = None
+            logging.warning(f'Ошибка при удалении сообщения {state.category_message_id}')
 
 
-async def delete_edit_message(message: Message, bot: Bot, fsm_data: FsmData):
-    if fsm_data.edit_message:
+async def delete_edit_message(message: Message, bot: Bot, state: FSMContext):
+    if state.edit_message:
         try:
-            await bot.delete_message(message.chat.id, fsm_data.edit_message)
-            logging.debug(f'Сообщение {fsm_data.edit_message} успешно удалено')
+            await bot.delete_message(message.chat.id, state.edit_message)
+            logging.debug(f'Сообщение {state.edit_message} успешно удалено')
         except TelegramBadRequest:
-            fsm_data.edit_message = None
-            logging.warning(f'Ошибка при удалении сообщения {fsm_data.edit_message}')
+            state.edit_message = None
+            logging.warning(f'Ошибка при удалении сообщения {state.edit_message}')
 
 
 async def delete_message_default(chat_id, message_id, bot: Bot):
@@ -322,28 +321,17 @@ async def delete_message_default(chat_id, message_id, bot: Bot):
         logging.warning(f'Такого сообщения не существует - {message_id}')
 
 
-async def process_parent_button(message, bot, message_editor: MessageEditor, fsm_data: FsmData):
+async def process_parent_button(message, bot):
     child_buttons = buttons_questions[message.text].get("children", {})
     if child_buttons:
-        keyboard = create_keyboard(child_buttons)
-        category_message: Message = await message.answer(f"Выбранная категория: <b>{message.text}</b>", reply_markup=keyboard)
-
-        await delete_category_message_id(message, bot, fsm_data)
-        await delete_need_messages(bot, message.chat.id, fsm_data)
-        await delete_edit_message(category_message, bot, fsm_data)
-
-        await fsm_data.update_data(edit_message=None, category_message_id=category_message.message_id)
-
-        await message_editor.handle_message(category_message, text="<b>Выберите вопрос\nКнопки для выбора вопроса находятся снизу</b> ⤵️", reply_markup=questions_back_menu())
-
-        await fsm_data.update_data(handler_name=message.text, caption="Выберите категорию вопроса")
+        keyboard = create_keyboard(child_buttons, False)
+        await message.answer(f"Выбранная категория: <b>{message.text}</b>", reply_markup=keyboard)
 
 
-async def process_child_button(message, message_editor: MessageEditor, fsm_data: FsmData):
+async def process_child_button(message, state: FSMContext):
     for parent_button, parent_data in buttons_questions.items():
         child_buttons = parent_data.get("children", {})
         if message.text in child_buttons:
             text_to_send = child_buttons[message.text].get("text", "Информация не найдена.")
-            await message_editor.handle_message(message, text=f'✅ Ответ по вопросу <b>"{message.text}"</b>:\n\n{text_to_send}', reply_markup=questions_back_menu(), reply_markup_push=True)
-            await fsm_data.update_data(handler_name=message.text, caption=text_to_send)
+            await message.answer(text=f'✅ Ответ по вопросу <b>"{message.text}"</b>:\n\n{text_to_send}')
             return

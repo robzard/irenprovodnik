@@ -1,11 +1,17 @@
 from aiogram import Router, types, F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import StateFilter
+from aiogram.types import FSInputFile, ReplyKeyboardRemove
 
 from filters.all_filters import ReplyButtonsQuestions
-from states.states import FSMGpt, FsmData
+from states.states import FSMGpt
 from utils.dict_buttons import buttons_questions
 from utils.utils import MessageEditor, process_parent_button, process_child_button
+
+from keyboards.user.reply import create_keyboard
+
+from keyboards.user.inline import command_start
+from lexicon.lexicon import LEXICON
 
 router = Router(name=__name__)
 
@@ -23,9 +29,24 @@ async def gpt_question(message: types.Message, state: FSMContext):
 
 
 @router.message(ReplyButtonsQuestions())
-async def handle_message(message: types.Message, bot: Bot, message_editor: MessageEditor, fsm_data: FsmData):
+async def handle_message(message: types.Message, bot: Bot, state: FSMContext):
     await message.delete()
     if message.text in buttons_questions:
-        await process_parent_button(message, bot, message_editor, fsm_data)
+        await process_parent_button(message, bot)
     else:
-        await process_child_button(message, message_editor, fsm_data)
+        await state.update_data({'questions_category': message.text})
+        await process_child_button(message, state)
+
+
+@router.message(F.text == 'Назад')
+async def gpt_question(message: types.Message, bot: Bot, state: FSMContext):
+    await message.answer(text='Выберите что вас интересует..', reply_markup=create_keyboard(buttons_questions, True))
+
+
+@router.message(F.text == 'Меню')
+async def gpt_question(message: types.Message, bot: Bot, state: FSMContext):
+    image_path = './static/images/iren.jpg'
+    media = FSInputFile(image_path)
+    msg = await message.answer("Возврат в меню", reply_markup=ReplyKeyboardRemove())
+    await msg.delete()
+    await message.answer_photo(photo=media, caption=LEXICON['user_command_start'], reply_markup=command_start(message.from_user.id))

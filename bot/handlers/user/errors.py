@@ -4,21 +4,21 @@ from datetime import datetime
 
 from aiogram import Router
 from aiogram.filters import ExceptionTypeFilter
+from aiogram.fsm.context import FSMContext
 from aiogram.types import ErrorEvent
 
 from common.db.requests import get_admins  # ,log_grafana_after
-from states.states import FsmData
 from utils.utils import extract_event_data
 
 router = Router(name=__name__)
 
 
 @router.error(ExceptionTypeFilter(Exception))
-async def handle_my_custom_exception(event: ErrorEvent, fsm_data: FsmData):
+async def handle_my_custom_exception(event: ErrorEvent, state: FSMContext):
     exception = event.exception
     traceback_format_exc = traceback.format_exc()
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    before_handler_name = fsm_data.before_handler_name
+    before_handler_name = state.before_handler_name
     error_msg = f"Time: {time}\nException: {exception}\nTraceback: {traceback_format_exc}"
     logging.error(error_msg)
 
@@ -39,11 +39,11 @@ async def handle_my_custom_exception(event: ErrorEvent, fsm_data: FsmData):
 
 # Глобальный обработчик ошибок
 @router.error()
-async def error_handler(event: ErrorEvent, fsm_data: FsmData):
+async def error_handler(event: ErrorEvent, state: FSMContext):
     exception = event.exception
     traceback_format_exc = traceback.format_exc()
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    before_handler_name = fsm_data.before_handler_name
+    before_handler_name = state.before_handler_name
     error_msg = f"Time: {time}\nException: {exception}\nTraceback: {traceback_format_exc}"
     logging.critical(error_msg, exc_info=True)
 
@@ -53,7 +53,7 @@ async def error_handler(event: ErrorEvent, fsm_data: FsmData):
     if update_obj:
         user = update_obj.from_user
         user_data = f"User ID: {user.id}, Username: {user.username}"
-        error_msg += f"\n{user_data}\nFSM Data: {fsm_data}"
+        error_msg += f"\n{user_data}\nFSM Data: {state}"
 
     admins = await get_admins()
 

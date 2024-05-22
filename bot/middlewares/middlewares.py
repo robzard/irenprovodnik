@@ -8,7 +8,6 @@ from sqlalchemy.orm import sessionmaker
 
 from common.db.models import User
 from common.db.requests import get_user_data, create_user
-from states.states import FsmData
 from utils.utils import MessageEditor, get_event_text
 
 import logging
@@ -24,23 +23,17 @@ class DatabaseSessionMiddleware(BaseMiddleware):
                        data: Dict[str, Any]) -> Any:
         logging.debug(f'Старт обработки - {get_event_text(event)} ({event.event_type})')
         state: FSMContext = data.get('state')
-        fsm_data = FsmData(state)
         # await fsm_data.update_params_from_state()
 
         # before_handler_name = await self.get_before_handler(data, fsm_data)
 
         await self.registration_user(event)
 
-        data['message_editor'] = MessageEditor(event.bot, fsm_data)
-        data['fsm_data'] = fsm_data
-        logging.debug('BEFORE UPDATE fsm_data - ' + str(fsm_data))
         await handler(event, data)
 
         # await fsm_data.update_data()
 
         # await self.log_grafana(event, fsm_data, before_handler_name)
-
-        logging.debug('AFTER UPDATE fsm_data - ' + str(fsm_data))
 
         logging.debug(f'Конец обработки - {get_event_text(event)} ({event.event_type})')
 
@@ -58,15 +51,15 @@ class DatabaseSessionMiddleware(BaseMiddleware):
             await create_user(user_data)
 
     @staticmethod
-    async def log_grafana(event: Update, fsm_data: FsmData, before_handler_name: str):
+    async def log_grafana(event: Update, state: FSMContext, before_handler_name: str):
         pass
         # await log_grafana_after(event, fsm_data, before_handler_name, 'INFO')
 
     @staticmethod
-    async def get_before_handler(data: Dict[str, Any], fsm_data: FsmData) -> str:
+    async def get_before_handler(data: Dict[str, Any], state: FSMContext) -> str:
         data_fsm: dict = await data.get('state').get_data()
         before_handler_name = data_fsm.get('handler_name', '')
-        await fsm_data.update_data(before_handler_name=before_handler_name)
+        await state.update_data(before_handler_name=before_handler_name)
         return before_handler_name
 
 

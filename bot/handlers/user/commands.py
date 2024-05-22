@@ -6,12 +6,14 @@ from aiogram.filters import CommandStart, StateFilter, Command
 
 import logging
 
+from aiogram.types import InputMediaPhoto, FSInputFile
+
 # from custom_logger.logger import logger
 from common.db.requests import get_all_users
 from filters.all_filters import IsAdmin
 from keyboards.user.inline import command_start, channel_move_to_chatbot, send_all
 from lexicon.lexicon import LEXICON
-from states.states import FSMGpt, FsmData
+from states.states import FSMGpt
 from utils.utils import delete_need_messages, MessageEditor
 # from custom_logger.logger import logger
 
@@ -28,13 +30,10 @@ async def forward_message_to_channel(message: types.Message, bot: Bot):
 
 
 @router.message(CommandStart(), StateFilter(default_state, FSMGpt.wait_question))
-async def on_start(message: types.Message, fsm_data: FsmData, bot: Bot, message_editor: MessageEditor, user_id: int = None):
-    await delete_need_messages(bot, message.chat.id, fsm_data, start=True)
-
-    path_image_start = './static/images/start.jpg'
-
-    await message_editor.handle_message(message, photo_path=path_image_start, photo=True, text=LEXICON['user_command_start'], reply_markup=command_start(user_id if user_id else message.from_user.id))
-    await fsm_data.update_data(handler_name='Меню', selected_course=None)
+async def on_start(message: types.Message):
+    image_path = './static/images/iren.jpg'
+    media = FSInputFile(image_path)
+    await message.answer_photo(photo=media, caption=LEXICON['user_command_start'], reply_markup=command_start(message.from_user.id))
 
 
 @router.message(Command('send_all'), IsAdmin())

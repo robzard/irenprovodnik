@@ -82,7 +82,7 @@ def contacts() -> InlineKeyboardMarkup:
     builder.button(text="Telegram канал школы", url='https://t.me/teylaschool_online')
     builder.button(text="Сайт школы", url='https://www.teylaschool.ru')
     builder.button(text="Менеджер", url='https://t.me/Teylaschool')
-    builder.button(text="Назад", callback_data='start')
+    builder.button(text="Назад", callback_data='contacts_back_menu')
     builder.adjust(1, 2)
     return builder.as_markup()
 
