@@ -38,7 +38,7 @@ router = Router(name=__name__)
 #     await on_start(callback_query.message, state, bot, message_editor, callback_query.from_user.id)
 
 @router.callback_query(lambda c: c.data == 'start')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext):
+async def start(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.answer()
     image_path = './static/images/iren.jpg'
     media = FSInputFile(image_path)
@@ -46,7 +46,7 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
 
 
 @router.callback_query(lambda c: c.data == 'support')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext):
+async def support(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.answer()
     await callback_query.message.answer("Напишите свой вопрос и я вам помогу разобраться с вашей проблемой.")
     await state.set_state(FSMGpt.wait_question)
@@ -55,55 +55,55 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
 
 
 @router.callback_query(lambda c: c.data == 'support_quit')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext):
+async def support_quit(callback_query: types.CallbackQuery, state: FSMContext):
     await state.clear()
     await callback_query.answer('Вы вышли из чата с ассистентом.')
     await callback_query.message.answer('Вы вышли из консультации с ассистентом. (Тут можно переводить на менеджера)', reply_markup=menu())
 
 
 @router.callback_query(lambda c: c.data == 'questions')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+async def questions(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
     await callback_query.message.answer(text='Выберите что вас интересует..', reply_markup=create_keyboard(buttons_questions, True))
 
 
 @router.callback_query(lambda c: c.data == 'contacts')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext):
+async def contacts(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.message.edit_reply_markup(reply_markup=inline.contacts())
 
 
 @router.callback_query(lambda c: c.data == 'back_to_course')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext):
+async def back_to_course(callback_query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     course_name_id = course_names.get(data.get('selected_course'))
     await callback_query.message.edit_reply_markup(reply_markup=inline.web_query_course(course_name_id, callback_query.from_user.id))
 
 
 @router.callback_query(lambda c: c.data == 'buy_course')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext):
+async def buy_course(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.message.edit_reply_markup(reply_markup=inline.buy_course_registration())
 
 
 @router.callback_query(lambda c: c.data == 'questions_back_menu')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+async def questions_back_menu(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     image_path = './static/images/iren.jpg'
     media = FSInputFile(image_path)
     await callback_query.message.answer_photo(photo=media, caption=LEXICON['user_command_start'], reply_markup=command_start(callback_query.from_user.id))
 
 
 @router.callback_query(lambda c: c.data == 'contacts_back_menu')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+async def contacts_back_menu(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.message.edit_reply_markup(reply_markup=command_start(callback_query.from_user.id))
 
 
 @router.callback_query(lambda c: c.data == 'chose_another_category')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+async def chose_another_category(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
     await bot.send_message(chat_id=callback_query.message.chat.id, text="Выберите категорию", reply_markup=create_keyboard(buttons_questions, True))
 
 
 @router.callback_query(lambda c: c.data == 'subscription')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+async def subscription(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
 
     user: User = await db.get_user_data(callback_query.message.chat.id)
@@ -115,16 +115,19 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
     else:
         subscription_active_to = user.payment_date + timedelta(days=30)
         text_autopayment = 'Автоплатёж включён' if user.auto_payment else 'Автоплатёж выключен'
-        await callback_query.message.answer(LEXICON['subscription'] % (subscription_active_to, text_autopayment), reply_markup=inline.my_subscription(user))
+        await callback_query.message.answer(LEXICON['subscription'] % (subscription_active_to.__format__('%d.%m.%Y %H:%M'), text_autopayment), reply_markup=inline.my_subscription(user))
 
 
 @router.callback_query(lambda c: c.data == 'activate_autopayment')
-async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+async def activate_autopayment(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
     user: User = await db.get_user_data(callback_query.message.chat.id)
     if not user.auto_payment:
         await db.set_user_auto_payment(user, True)
-        await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))
+        user.auto_payment = True
+        subscription_active_to = user.payment_date + timedelta(days=30)
+        text_autopayment = 'Автоплатёж включён' if user.auto_payment else 'Автоплатёж выключен'
+        await callback_query.message.edit_text(LEXICON['subscription'] % (subscription_active_to.__format__('%d.%m.%Y %H:%M'), text_autopayment), reply_markup=inline.my_subscription(user))
 
 
 @router.callback_query(lambda c: c.data == 'inactive_autopayment')
@@ -133,4 +136,7 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
     user: User = await db.get_user_data(callback_query.message.chat.id)
     if user.auto_payment:
         await db.set_user_auto_payment(user, False)
-        await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))
+        user.auto_payment = False
+        subscription_active_to = user.payment_date + timedelta(days=30)
+        text_autopayment = 'Автоплатёж включён' if user.auto_payment else 'Автоплатёж выключен'
+        await callback_query.message.edit_text(LEXICON['subscription'] % (subscription_active_to.__format__('%d.%m.%Y %H:%M'), text_autopayment), reply_markup=inline.my_subscription(user))
