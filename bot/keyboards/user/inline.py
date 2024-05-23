@@ -129,9 +129,9 @@ def payment(url: str):
 def my_subscription(user: User):
     builder = InlineKeyboardBuilder()
     if user.auto_payment:
-        builder.button(text="Отключить автоплатёж", callback_data='activate_autopayment')
+        builder.button(text="Отключить автоплатёж", callback_data='inactive_autopayment')
     else:
-        builder.button(text="Включить автоплатёж", callback_data='inactive_autopayment')
+        builder.button(text="Включить автоплатёж", callback_data='activate_autopayment')
     builder.button(text="☰ Меню", callback_data='start')
     builder.adjust(1)
     return builder.as_markup()
