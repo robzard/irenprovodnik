@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 
 from aiogram import Router, types, Bot
 
@@ -112,4 +113,6 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
         url: str = yk.create_first_payment(callback_query.message.chat.id)
         await callback_query.message.answer("Информация о подписке", reply_markup=inline.payment(url))
     else:
-        await callback_query.message.answer(f"У вас оформлена подписка. Она действительна до {user.payment_date}. Следующее списание будет []. Автоплатёж включён.", reply_markup=inline.my_subscription(user))
+        subscription_active_to = user.payment_date + timedelta(days=30)
+        text_autopayment = 'Автоплатёж включён' if user.auto_payment else 'Автоплатёж выключен'
+        await callback_query.message.answer(LEXICON['subscription'] % (subscription_active_to, text_autopayment), reply_markup=inline.my_subscription(user))
