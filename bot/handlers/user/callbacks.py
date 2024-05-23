@@ -18,6 +18,10 @@ from lexicon.lexicon import LEXICON
 
 from filters.all_filters import course_names
 
+from common.db.models import User
+from common.yookassa_payment.yookassa_handler import YookassaHandler
+import common.db.requests as db
+
 router = Router(name=__name__)
 
 
@@ -94,4 +98,18 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
 @router.callback_query(lambda c: c.data == 'chose_another_category')
 async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
-    msg = await bot.send_message(chat_id=callback_query.message.chat.id, text="Выберите категорию", reply_markup=create_keyboard(buttons_questions, True))
+    await bot.send_message(chat_id=callback_query.message.chat.id, text="Выберите категорию", reply_markup=create_keyboard(buttons_questions, True))
+
+
+@router.callback_query(lambda c: c.data == 'subscription')
+async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+    await callback_query.answer()
+
+    user: User = await db.get_user_data(callback_query.message.chat.id)
+
+    if not user.payment_date:
+        yk = YookassaHandler()
+        url: str = yk.create_first_payment(callback_query.message.chat.id)
+        await callback_query.message.answer("Информация о подписке", reply_markup=inline.payment(url))
+    else:
+        await callback_query.message.answer(f"У вас оформлена подписка. Она действительна до {user.payment_date}. Следующее списание будет []. Автоплатёж включён.", reply_markup=inline.my_subscription(user))

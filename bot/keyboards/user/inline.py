@@ -3,6 +3,8 @@ from aiogram.types import InlineKeyboardMarkup, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from config_data.config import load_config
 
+from common.db.models import User
+
 config = load_config()
 
 
@@ -10,10 +12,11 @@ def command_start(user_id: int) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.button(text="🎓 Курсы", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/teyla_courses?user_id={user_id}'))
     builder.button(text="✉️ Контакты", callback_data='contacts')
+    builder.button(text="🌟 Подписка на канал", callback_data='subscription')
     builder.button(text="❓ Часто задаваемые вопросы", callback_data='questions')
     builder.button(text="💬 Написать менеджеру", url='https://t.me/Teylaschool')  # callback_data='support'
     # builder.button(text="Статистика", web_app=WebAppInfo(url='https://teylaschoolcourse.ru/grafana/public-dashboards/196b77dca7b64b75b6dc4e3edfadb8a9'))
-    builder.adjust(2, 1, 1)
+    builder.adjust(2, 1, 1, 1)
     return builder.as_markup()
 
 
@@ -116,6 +119,19 @@ def send_all() -> InlineKeyboardMarkup:
 
 
 def payment(url: str):
-    button = types.InlineKeyboardButton(text="Оформить подписку", url=url)
-    keyboard = types.InlineKeyboardMarkup(inline_keyboard=[[button]])  # Создаем объект клавиатуры
-    return keyboard
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Оформить подписку", url=url)
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+def my_subscription(user: User):
+    builder = InlineKeyboardBuilder()
+    if user.subscription:
+        builder.button(text="Отключить автоплатёж", callback_data='activate_autopayment')
+    else:
+        builder.button(text="Включить автоплатёж", callback_data='inactive_autopayment')
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(1)
+    return builder.as_markup()

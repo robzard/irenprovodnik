@@ -21,5 +21,9 @@ async def course_show(message: types.InlineQueryResult, state: FSMContext, cours
 
 @router.message(CourseBuyFilter())
 async def course_change_inline(message: types.InlineQueryResult, state: FSMContext, course_name: str, course_names: dict):
-    await message.edit_reply_markup(reply_markup=inline.buy_course_registration())
+    course_name_id = course_names[course_name]
+    image_path = f'./static/images/{course_name_id}.jpg'
+    media = FSInputFile(image_path)
+    await message.answer_photo(photo=media, caption=LEXICON[course_name_id], reply_markup=inline.buy_course_registration())
+    await state.update_data(selected_course=course_name)
 
