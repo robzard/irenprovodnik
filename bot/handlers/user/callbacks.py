@@ -116,3 +116,19 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
         subscription_active_to = user.payment_date + timedelta(days=30)
         text_autopayment = 'Автоплатёж включён' if user.auto_payment else 'Автоплатёж выключен'
         await callback_query.message.answer(LEXICON['subscription'] % (subscription_active_to, text_autopayment), reply_markup=inline.my_subscription(user))
+
+
+@router.callback_query(lambda c: c.data == 'activate_autopayment')
+async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+    await callback_query.answer()
+    user: User = await db.get_user_data(callback_query.message.chat.id)
+    await db.set_user_auto_payment(user, True)
+    await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))
+
+
+@router.callback_query(lambda c: c.data == 'inactive_autopayment')
+async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+    await callback_query.answer()
+    user: User = await db.get_user_data(callback_query.message.chat.id)
+    await db.set_user_auto_payment(user, False)
+    await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))

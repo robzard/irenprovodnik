@@ -216,6 +216,16 @@ async def get_last_payment_id(user_id: int):
         return last_payment
 
 
+async def set_user_auto_payment(user: User, auto_payment: bool):
+    async with AsyncSession() as session:
+        await session.execute(
+            update(User).
+            where(User.user_id == int(user.user_id)).
+            values(auto_payment=auto_payment)
+        )
+        await session.commit()
+
+
 class BaseManager:
 
     def __init__(self, session=None):
