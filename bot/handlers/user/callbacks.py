@@ -122,13 +122,15 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
 async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
     user: User = await db.get_user_data(callback_query.message.chat.id)
-    await db.set_user_auto_payment(user, True)
-    await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))
+    if not user.auto_payment:
+        await db.set_user_auto_payment(user, True)
+        await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))
 
 
 @router.callback_query(lambda c: c.data == 'inactive_autopayment')
 async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
     user: User = await db.get_user_data(callback_query.message.chat.id)
-    await db.set_user_auto_payment(user, False)
-    await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))
+    if user.auto_payment:
+        await db.set_user_auto_payment(user, False)
+        await callback_query.message.edit_reply_markup(reply_markup=inline.my_subscription(user))
