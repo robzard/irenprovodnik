@@ -16,6 +16,8 @@ from lexicon.lexicon import LEXICON
 router = Router(name=__name__)
 
 
+
+
 @router.message(StateFilter(FSMGpt.wait_question), F.text != '/start')
 async def gpt_question(message: types.Message, state: FSMContext):
     await message.reply('Cкоро отвечу')
