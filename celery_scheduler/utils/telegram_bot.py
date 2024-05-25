@@ -13,6 +13,7 @@ async def subscription_expired(user_id):
     try:
         text = f'Ваша подписка истекла, чтобы продлить подписку нажмите на кнопку.'
         await bot.send_message(user_id, text)
+        await delete_user_from_channel(user_id)
     except Exception as ex:
         logging.warning(f'Пользователю {user_id} не удалось отправить сообщение - {str(ex)}')
     finally:
@@ -46,5 +47,18 @@ async def renew_subscription(user_id):
         return payment
     except Exception as ex:
         logging.error(f'Пользователю {user_id} не автоматически списать деньги - {str(ex)}')
+    finally:
+        await bot.session.close()
+
+
+async def delete_user_from_channel(user_id):
+    bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
+
+    try:
+        logging.info('Удаляю пользователя из канала')
+        await bot.ban_chat_member(chat_id='-1002243003596', user_id=user_id)
+        logging.info('Пользователь удалён из канала успешно')
+    except Exception as ex:
+        logging.error(f'Не удалось удалить пользователя с канала - {user_id} ({str(ex)})')
     finally:
         await bot.session.close()
