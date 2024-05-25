@@ -108,7 +108,7 @@ async def subscription(callback_query: types.CallbackQuery, state: FSMContext, b
 
     user: User = await db.get_user_data(callback_query.message.chat.id)
 
-    if not user.payment_date:
+    if not user.subscription:
         yk = YookassaHandler()
         url: str = yk.create_first_payment(callback_query.message.chat.id)
         await callback_query.message.answer("Информация о подписке", reply_markup=inline.payment(url))
