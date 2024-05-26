@@ -1,5 +1,6 @@
 import logging
 
+from aiogram.enums import ChatMemberStatus
 from aiogram.types import ChatInviteLink
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
@@ -37,8 +38,13 @@ async def unban_chat_member(user_id):
 
     try:
         logging.info('Разбан пользователя канала')
-        await bot.unban_chat_member(chat_id=private_channel_id, user_id=user_id)
-        logging.info('Пользователь разбанен в канале успешно')
+
+        chat_member = await bot.get_chat_member(chat_id=private_channel_id, user_id=user_id)
+        if chat_member.status == ChatMemberStatus.KICKED:
+            await bot.unban_chat_member(chat_id=private_channel_id, user_id=user_id)
+            logging.info('Пользователь разбанен в канале успешно')
+        else:
+            logging.info('Пользователь не забанен, пропуск события')
     except Exception as ex:
         logging.error(f'Не удалось разбанить пользователя в канале - {user_id} ({str(ex)})')
     finally:
