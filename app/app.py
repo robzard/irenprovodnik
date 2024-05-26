@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncSessio
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from utils.telegram_bot import send_telegram_message_succeeded
+from utils.telegram_bot import send_telegram_message_succeeded, unban_chat_member
 from common.db.requests import save_payment, update_payment_date
 
 db_url = f"postgresql+psycopg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DATABASE')}?options=-c%20timezone%3DAsia/Yekaterinburg"
@@ -157,6 +157,7 @@ async def yookassa_notification():
     payment = await save_payment(data)
     if payment.status == "succeeded":
         await update_payment_date(payment)
+        await unban_chat_member(payment.user_id)
         await send_telegram_message_succeeded(payment)
 
     response = make_response(jsonify({'status': 'success'}))

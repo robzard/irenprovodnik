@@ -1,9 +1,14 @@
+import logging
+
 from aiogram.types import ChatInviteLink
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from common.db.models import Payments
 import os
 from aiogram import Bot
+
+
+private_channel_id = '-1002243003596'
 
 
 async def send_telegram_message_succeeded(payment: Payments):
@@ -25,3 +30,16 @@ def inline_button_invite_link(link: ChatInviteLink):
     builder = InlineKeyboardBuilder()
     builder.button(text="Подписаться на канал", url=link.invite_link)
     return builder.as_markup()
+
+
+async def unban_chat_member(user_id):
+    bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
+
+    try:
+        logging.info('Разбан пользователя канала')
+        await bot.unban_chat_member(chat_id=private_channel_id, user_id=user_id)
+        logging.info('Пользователь разбанен в канале успешно')
+    except Exception as ex:
+        logging.error(f'Не удалось разбанить пользователя в канале - {user_id} ({str(ex)})')
+    finally:
+        await bot.session.close()
