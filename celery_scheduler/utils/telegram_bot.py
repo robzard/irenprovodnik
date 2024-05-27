@@ -11,7 +11,7 @@ from common.yookassa_payment.yookassa_handler import YookassaHandler
 private_channel_id = '-1002243003596'
 
 
-def payment(url: str):
+def inline_payment(url: str):
     builder = InlineKeyboardBuilder()
     builder.button(text="Оформить подписку", url=url)
     builder.button(text="☰ Меню", callback_data='start')
@@ -28,7 +28,7 @@ async def subscription_expired(user: User):
         yk = YookassaHandler()
         url: str = yk.create_first_payment(user.user_id)
         text = f'Ваша подписка истекла, чтобы продлить подписку нажмите на кнопку.'
-        await bot.send_message(user.user_id, text, reply_markup=payment(url))
+        await bot.send_message(user.user_id, text, reply_markup=inline_payment(url))
         await ban_chat_member(user.user_id)
     except Exception as ex:
         logging.warning(f'Пользователю {user.user_id} не удалось отправить сообщение - {str(ex)}')
@@ -61,9 +61,11 @@ async def renew_subscription(user: User):
         if payment.status == 'succeeded':
             await set_subscription_true(user)
         else:
+            yk = YookassaHandler()
+            url: str = yk.create_first_payment(user.user_id)
             await set_subscription_false(user)
             await ban_chat_member(user.user_id)
-            await bot.send_message(user.user_id, "Не удалось продлить подписку. Пожалуйста, попробуйте снова.")
+            await bot.send_message(user.user_id, "Не удалось продлить подписку. Пожалуйста, попробуйте снова.", reply_markup=inline_payment(url))
     except Exception as ex:
         logging.error(f'Пользователю {user.user_id} не автоматически списать деньги - {str(ex)}')
     finally:

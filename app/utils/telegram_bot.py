@@ -31,6 +31,7 @@ def inline_button_invite_link(link: ChatInviteLink):
     builder = InlineKeyboardBuilder()
     builder.button(text="Подписаться на канал", url=link.invite_link)
     builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(1)
     return builder.as_markup()
 
 
