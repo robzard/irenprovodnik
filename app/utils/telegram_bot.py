@@ -15,7 +15,7 @@ private_channel_id = '-1002243003596'
 async def send_telegram_message_succeeded(payment: Payments):
     bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
     description_type = {'Первоначальная подписка на канал': 'Оплата подписки', 'Ежемесячная подписка на канал': 'Продление подписки'}
-    link: ChatInviteLink = await bot.create_chat_invite_link('-1002243003596', member_limit=1)
+    link: ChatInviteLink = await bot.create_chat_invite_link(private_channel_id, member_limit=1)
 
     try:
         if payment.status == "succeeded":

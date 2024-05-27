@@ -1,6 +1,7 @@
 import logging
 import os
 from aiogram import Bot
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from yookassa import Payment
 
 from common.db.models import User
@@ -10,14 +11,24 @@ from common.yookassa_payment.yookassa_handler import YookassaHandler
 private_channel_id = '-1002243003596'
 
 
+def payment(url: str):
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Оформить подписку", url=url)
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(1)
+    return builder.as_markup()
+
+
 async def subscription_expired(user: User):
     bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
 
     await set_subscription_false(user)
 
     try:
+        yk = YookassaHandler()
+        url: str = yk.create_first_payment(user.user_id)
         text = f'Ваша подписка истекла, чтобы продлить подписку нажмите на кнопку.'
-        await bot.send_message(user.user_id, text)
+        await bot.send_message(user.user_id, text, reply_markup=payment(url))
         await ban_chat_member(user.user_id)
     except Exception as ex:
         logging.warning(f'Пользователю {user.user_id} не удалось отправить сообщение - {str(ex)}')
