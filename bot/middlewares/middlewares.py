@@ -109,9 +109,9 @@ class CallbackThrottlingMiddleware(BaseMiddleware):
         time_is_left = True
 
         if date_time:
-            time_is_left = (datetime.now() - date_time) >= timedelta(seconds=30)
+            time_is_left = (datetime.now() - date_time) >= timedelta(seconds=10)
 
-        if wait_callback or not time_is_left:
+        if wait_callback and not time_is_left:
             await event.answer("Пожалуйста, подождите")
             return
 
