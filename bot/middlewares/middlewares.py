@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime, timedelta
 from typing import Callable, Dict, Any
 from aiogram import BaseMiddleware, Bot, types
 from aiogram.fsm.context import FSMContext
@@ -104,12 +105,17 @@ class CallbackThrottlingMiddleware(BaseMiddleware):
         fsm_context: FSMContext = data.get("state")
         state_data = await fsm_context.get_data()
         wait_callback = state_data.get('wait_callback', False)
+        date_time = state_data.get('date_time', None)
+        time_is_left = True
 
-        if wait_callback:
+        if date_time:
+            time_is_left = (datetime.now() - date_time) >= timedelta(seconds=30)
+
+        if wait_callback or not time_is_left:
             await event.answer("Пожалуйста, подождите")
             return
 
-        await fsm_context.update_data(wait_callback=True)
+        await fsm_context.update_data(wait_callback=True, date_time=datetime.now())
         try:
             await handler(event, data)
         finally:
