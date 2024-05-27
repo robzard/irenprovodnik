@@ -30,6 +30,7 @@ async def send_telegram_message_succeeded(payment: Payments):
 def inline_button_invite_link(link: ChatInviteLink):
     builder = InlineKeyboardBuilder()
     builder.button(text="Подписаться на канал", url=link.invite_link)
+    builder.button(text="☰ Меню", callback_data='start')
     return builder.as_markup()
 
 
