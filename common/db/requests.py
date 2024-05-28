@@ -168,7 +168,7 @@ async def update_payment_date(payment: Payments, subscription=True):
             await session.execute(
                 update(User).
                 where(User.user_id == int(payment.user_id)).
-                values(payment_date=payment.created_at, subscription=subscription)
+                values(payment_date=payment.created_at, subscription=subscription, subscription_notification=False)
             )
             await session.commit()
 
@@ -181,6 +181,21 @@ async def get_users_subscription_expired():
             where(
                 User.subscription.is_(True),
                 User.payment_date < one_month_ago
+            )
+        )
+        users = result.scalars().all()
+        return users
+
+
+async def get_users_subscription_notification():
+    async with AsyncSession() as session:
+        one_month_ago = datetime.utcnow() - timedelta(days=27)
+        result = await session.execute(
+            select(User).
+            where(
+                User.subscription.is_(True),
+                User.payment_date < one_month_ago,
+                User.subscription_notification.is_(False)
             )
         )
         users = result.scalars().all()
@@ -222,6 +237,16 @@ async def set_user_auto_payment(user: User, auto_payment: bool):
             update(User).
             where(User.user_id == int(user.user_id)).
             values(auto_payment=auto_payment)
+        )
+        await session.commit()
+
+
+async def set_user_subscription_notification(user: User, subscription_notification: bool):
+    async with AsyncSession() as session:
+        await session.execute(
+            update(User).
+            where(User.user_id == int(user.user_id)).
+            values(subscription_notification=subscription_notification)
         )
         await session.commit()
 

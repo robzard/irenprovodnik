@@ -5,7 +5,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from yookassa import Payment
 
 from common.db.models import User
-from common.db.requests import get_last_payment_id, set_subscription_true, set_subscription_false
+from common.db.requests import get_last_payment_id, set_subscription_true, set_subscription_false, set_user_subscription_notification
 from common.yookassa_payment.yookassa_handler import YookassaHandler
 
 private_channel_id = '-1002243003596'
@@ -14,6 +14,13 @@ private_channel_id = '-1002243003596'
 def inline_payment(url: str):
     builder = InlineKeyboardBuilder()
     builder.button(text="Оформить подписку", url=url)
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+def inline_menu():
+    builder = InlineKeyboardBuilder()
     builder.button(text="☰ Меню", callback_data='start')
     builder.adjust(1)
     return builder.as_markup()
@@ -30,6 +37,22 @@ async def subscription_expired(user: User):
         text = f'Ваша подписка истекла, чтобы продлить подписку нажмите на кнопку.'
         await bot.send_message(user.user_id, text, reply_markup=inline_payment(url))
         await ban_chat_member(user.user_id)
+    except Exception as ex:
+        logging.warning(f'Пользователю {user.user_id} не удалось отправить сообщение - {str(ex)}')
+    finally:
+        await bot.session.close()
+
+
+async def user_notification(user: User):
+    bot = Bot(token=os.getenv('BOT_TOKEN'), parse_mode='HTML')
+    text = "Ваша подписка на приватный канал истекает через 3 дня."
+    if user.auto_payment:
+        text += "\n\nЗа продление подписки деньги спишутся автоматически с вашей карты - у вас включён автоплатёж.\nЕсли хотите отключить автоплатёж, перейдите в настройки подписки и нажмите 'Отключить автоплатёж'"
+    else:
+        text += "\n\nУ вас отключён автоплатёж для продления подписки.\nЕсли хотите, чтобы подписка продливалась автоматически, то перейдите в настройки подписки и нажмите 'Включить автоплатёж'"
+    try:
+        await bot.send_message(user.user_id, text, reply_markup=inline_menu())
+        await set_user_subscription_notification(user, True)
     except Exception as ex:
         logging.warning(f'Пользователю {user.user_id} не удалось отправить сообщение - {str(ex)}')
     finally:
@@ -60,6 +83,7 @@ async def renew_subscription(user: User):
 
         if payment.status == 'succeeded':
             await set_subscription_true(user)
+            await set_user_subscription_notification(user, False)
         else:
             yk = YookassaHandler()
             url: str = yk.create_first_payment(user.user_id)

@@ -12,12 +12,14 @@ import utils.telegram_bot as tg
 
 # sys.path.append('/common')
 
-from common.db.requests import get_users_subscription_expired, set_subscription_false, set_subscription_true
+from common.db.requests import get_users_subscription_expired, set_subscription_false, set_subscription_true, get_users_subscription_notification
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 async def my_daily_task():
+    await users_notification()
+
     users = await get_users_subscription_expired()
     logging.info(f'get_users_subscription_expired: {len(users)}')
     for user in users:
@@ -27,6 +29,13 @@ async def my_daily_task():
         else:
             await tg.subscription_expired(user)
     logging.info("Выполнение задачи: %s", datetime.now())
+
+
+async def users_notification():
+    users_need_notification = await get_users_subscription_notification()
+    for user in users_need_notification:
+        logging.info(f'user_id notification: {user.user_id}')
+        await tg.user_notification(user)
 
 
 scheduler = AsyncIOScheduler()

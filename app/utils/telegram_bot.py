@@ -22,7 +22,11 @@ async def send_telegram_message_succeeded(payment: Payments):
             text = (f'{description_type[payment.description]} на сумму {payment.amount} рублей прошла успешно!\n'
                     f'Подписка на приватный канал оформлена, чтобы подписаться на канал нажмите на кнопку "Подписаться на канал".\n\n'
                     f'Деньги будут списываться ежемесячно автоматически (автоплатёж) для продления подписки, если хотите отменить автоплатёж, нажмите на кнопку "Отменить автоплатёж"')
-            await bot.send_message(payment.user_id, text, reply_markup=inline_button_invite_link(link))
+            if payment.description == 'Ежемесячная подписка на канал':
+                reply_markup = inline_button_join_link(link)
+            else:
+                reply_markup = inline_button_invite_link(link)
+            await bot.send_message(payment.user_id, text, reply_markup=reply_markup)
     finally:
         await bot.session.close()
 
@@ -30,6 +34,14 @@ async def send_telegram_message_succeeded(payment: Payments):
 def inline_button_invite_link(link: ChatInviteLink):
     builder = InlineKeyboardBuilder()
     builder.button(text="Подписаться на канал", url=link.invite_link)
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+def inline_button_join_link(link: ChatInviteLink):
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Перейти в канал", url=link.invite_link)
     builder.button(text="☰ Меню", callback_data='start')
     builder.adjust(1)
     return builder.as_markup()

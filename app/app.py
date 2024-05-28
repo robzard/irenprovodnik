@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from utils.telegram_bot import send_telegram_message_succeeded, unban_chat_member
-from common.db.requests import save_payment, update_payment_date
+from common.db.requests import save_payment, update_payment_date, set_user_subscription_notification
 
 db_url = f"postgresql+psycopg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}/{os.getenv('DATABASE')}?options=-c%20timezone%3DAsia/Yekaterinburg"
 engine: AsyncEngine = create_async_engine(db_url)

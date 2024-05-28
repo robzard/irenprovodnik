@@ -28,6 +28,7 @@ class User(Base):
     auto_payment: Mapped[bool | None] = mapped_column(Boolean, default=True)
     language_code: Mapped[str | None] = mapped_column(String, nullable=True)
     is_admin: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    subscription_notification: Mapped[bool | None] = mapped_column(Boolean, default=False)
 
     # Связь с таблицей "Курсы"
     grafana_logs: Mapped[list["GrafanaLogs"]] = relationship(back_populates='creator', lazy='selectin')
