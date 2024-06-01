@@ -40,7 +40,7 @@ router = Router(name=__name__)
 @router.callback_query(lambda c: c.data == 'start')
 async def start(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.answer()
-    image_path = './static/images/iren.jpg'
+    image_path = './static/images/iren2.jpg'
     media = FSInputFile(image_path)
     await callback_query.message.answer_photo(photo=media, caption=LEXICON['user_command_start'], reply_markup=command_start(callback_query.message.from_user.id))
 
@@ -86,7 +86,7 @@ async def buy_course(callback_query: types.CallbackQuery, state: FSMContext):
 
 @router.callback_query(lambda c: c.data == 'questions_back_menu')
 async def questions_back_menu(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
-    image_path = './static/images/iren.jpg'
+    image_path = './static/images/iren2.jpg'
     media = FSInputFile(image_path)
     await callback_query.message.answer_photo(photo=media, caption=LEXICON['user_command_start'], reply_markup=command_start(callback_query.from_user.id))
 

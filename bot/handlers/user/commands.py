@@ -32,7 +32,7 @@ async def forward_message_to_channel(message: types.Message, bot: Bot):
 
 @router.message(CommandStart(), StateFilter(default_state, FSMGpt.wait_question))
 async def on_start(message: types.Message):
-    image_path = './static/images/iren.jpg'
+    image_path = './static/images/iren2.jpg'
     media = FSInputFile(image_path)
     await message.answer_photo(photo=media, caption=LEXICON['user_command_start'], reply_markup=command_start(message.from_user.id))
 

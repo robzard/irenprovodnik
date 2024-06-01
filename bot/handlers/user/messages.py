@@ -47,7 +47,7 @@ async def gpt_question(message: types.Message, bot: Bot, state: FSMContext):
 
 @router.message(F.text == 'Меню')
 async def gpt_question(message: types.Message, bot: Bot, state: FSMContext):
-    image_path = './static/images/iren.jpg'
+    image_path = './static/images/iren2.jpg'
     media = FSInputFile(image_path)
     msg = await message.answer("Возврат в меню", reply_markup=ReplyKeyboardRemove())
     await msg.delete()

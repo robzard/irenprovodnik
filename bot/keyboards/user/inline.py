@@ -10,9 +10,11 @@ config = load_config()
 
 def command_start(user_id: int) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
-    builder.button(text="🎓 Курсы", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/teyla_courses?user_id={user_id}'))
+    # builder.button(text="🎓 Курсы", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/teyla_courses?user_id={user_id}'))
+    builder.button(text="🌀 Запись на Марафон", callback_data='marafon')
     builder.button(text="✉️ Контакты", callback_data='contacts')
-    builder.button(text="🌟 Подписка на канал", callback_data='subscription')
+    builder.button(text="🌟 Подписка на приватый канал", callback_data='subscription')
+    builder.button(text="⏺ Записаться на консультацию", callback_data='subscription')
     builder.button(text="❓ Часто задаваемые вопросы", callback_data='questions')
     builder.button(text="💬 Написать менеджеру", url='https://t.me/Teylaschool')  # callback_data='support'
     # builder.button(text="Статистика", web_app=WebAppInfo(url='https://teylaschoolcourse.ru/grafana/public-dashboards/196b77dca7b64b75b6dc4e3edfadb8a9'))
@@ -82,11 +84,12 @@ def buy_course_registration() -> InlineKeyboardMarkup:
 
 def contacts() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
-    builder.button(text="Telegram канал школы", url='https://t.me/teylaschool_online')
-    builder.button(text="Сайт школы", url='https://www.teylaschool.ru')
-    builder.button(text="Менеджер", url='https://t.me/Teylaschool')
+    builder.button(text="Канал про духовность", url='https://t.me/teylaschool_online')
+    builder.button(text='Канал "Говорим PRo Sex"', url='https://www.teylaschool.ru')
+    builder.button(text='Instagram', url='https://www.instagram.com/irinak_kundalini?igsh=bGR1OW5uZ3M3cW9h')
+    builder.button(text="Telegram", url='https://t.me/IRINaIGOREVNA8')
     builder.button(text="Назад", callback_data='contacts_back_menu')
-    builder.adjust(1, 2)
+    builder.adjust(1, 1, 2)
     return builder.as_markup()
 
 
