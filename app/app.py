@@ -138,7 +138,12 @@ async def yookassa_notification():
     data = request.json
     logger.info(f'yookassa_notification - {str(data)}')
     payment = await save_payment(data)
-    if payment.status == "succeeded":
+    # TODO: Сделать отдельный параметр в БД для подписки и марафона
+    if payment.description == 'Забронировать место на марафоне "Чувствилище"':
+        response = make_response(jsonify({'status': 'success'}))
+        response.status_code = 200
+        return response
+    elif payment.status == "succeeded":
         await update_payment_date(payment)
         await unban_chat_member(payment.user_id)
         await send_telegram_message_succeeded(payment)
