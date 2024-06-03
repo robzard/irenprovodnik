@@ -97,18 +97,16 @@
 <script>feather.replace()</script>
 <script>
 
-    var courseName;
     var domenWebApp;
 
     document.addEventListener('DOMContentLoaded', function() {
         if (window.Telegram.WebApp) {
-            let courseName = "{{ course_name }}";
 
             // Настройка кнопки отправки через Telegram Web App
-            Telegram.WebApp.MainButton.setText('Выбрать способ оплаты');
+            Telegram.WebApp.MainButton.setText('Купить');
             Telegram.WebApp.MainButton.show();
             Telegram.WebApp.MainButton.onClick(() => {
-                sendInfo('купить курс - ' + courseName);
+                sendInfo('Оплата марфона');
             });
         }
     });

@@ -41,6 +41,31 @@ class YookassaHandler:
         self.payment_id: str = payment.id
         return payment.confirmation.confirmation_url
 
+    def create_url_pay_marafon(self, user_id) -> str:
+        payment: PaymentResponse = Payment.create({
+            'amount': {
+                'value': '3000.00',
+                'currency': 'RUB'
+            },
+            'confirmation': {
+                'type': 'redirect',
+                'return_url': 'https://your-website.com/return'
+            },
+            'capture': True,
+            'description': 'Забронировать место на марафоне "Чувствилище"',
+            'save_payment_method': False,
+            'payment_method_data': {
+                'type': 'bank_card'
+            },
+            'metadata': {
+                'telegram_user_id': user_id,
+                'qwe': 'qwe'
+            }
+        })
+
+        self.payment_id: str = payment.id
+        return payment.confirmation.confirmation_url
+
     async def create_recurring_payment(self, user_id, payment_id):
         self.payment = Payment.create({
             'amount': {

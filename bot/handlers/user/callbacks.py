@@ -153,6 +153,11 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
 @router.callback_query(lambda c: c.data == 'marafon')
 async def questions_back_menu(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
     await callback_query.answer()
+
     image_path = './static/images/iren2.jpg'
     media = FSInputFile(image_path)
-    await callback_query.message.answer_photo(photo=media, caption=LEXICON['marafon'], reply_markup=inline.marafon(callback_query.message.chat.id))
+
+    yk = YookassaHandler()
+    url: str = yk.create_url_pay_marafon(callback_query.message.chat.id)
+
+    await callback_query.message.answer_photo(photo=media, caption=LEXICON['marafon'], reply_markup=inline.marafon(callback_query.message.chat.id, url))
