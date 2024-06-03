@@ -224,6 +224,7 @@ async def set_subscription_true(user: User):
 
 async def get_last_payment_id(user_id: int):
     async with AsyncSession() as session:
+        # TODO: нужно будет сделать фильтр, чтобы запрос был только по платежам подписки, чтобы не включал оплату марафона
         result = await session.execute(
             select(Payments.payment_id).filter(Payments.user_id == user_id).order_by(desc(Payments.created_at)).limit(1)
         )

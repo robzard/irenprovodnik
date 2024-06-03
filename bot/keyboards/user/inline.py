@@ -144,12 +144,20 @@ def my_subscription(user: User):
     return builder.as_markup()
 
 
-def marafon(user_id, payment_url):
+def marafon(user_id):
     builder = InlineKeyboardBuilder()
     builder.button(text="Программа марфона", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/marafon_program?user_id={user_id}'))
-    builder.button(text="Взять место", url=payment_url)
+    builder.button(text="Взять место", callback_data='pay_marafon')
     builder.button(text="Информация о марафоне", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/marafon_info?user_id={user_id}'))
     builder.button(text="Оплата и стоимость", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/payment_and_cost?user_id={user_id}'))
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(2, 1, 1, 1)
+    return builder.as_markup()
+
+
+def pay_marafon(payment_url):
+    builder = InlineKeyboardBuilder()
+    builder.button(text="💳 Оплатить", url=payment_url)
     builder.button(text="☰ Меню", callback_data='start')
     builder.adjust(2, 1, 1, 1)
     return builder.as_markup()
