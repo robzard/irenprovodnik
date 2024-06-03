@@ -10,14 +10,10 @@ config = load_config()
 
 def command_start(user_id: int) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
-    # builder.button(text="🎓 Курсы", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/teyla_courses?user_id={user_id}'))
     builder.button(text="🌀 Запись на Марафон", callback_data='marafon')
     builder.button(text="✉️ Контакты", callback_data='contacts')
     builder.button(text="🌟 Подписка на приватый канал", callback_data='subscription')
-    builder.button(text="⏺ Записаться на консультацию", callback_data='subscription')
-    builder.button(text="❓ Часто задаваемые вопросы", callback_data='questions')
-    builder.button(text="💬 Написать менеджеру", url='https://t.me/Teylaschool')  # callback_data='support'
-    # builder.button(text="Статистика", web_app=WebAppInfo(url='https://teylaschoolcourse.ru/grafana/public-dashboards/196b77dca7b64b75b6dc4e3edfadb8a9'))
+    builder.button(text="⏺ Записаться на консультацию", callback_data='consultation')
     builder.adjust(2, 1, 1, 1)
     return builder.as_markup()
 
@@ -129,6 +125,14 @@ def payment(url: str):
     return builder.as_markup()
 
 
+def consultation():
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Согласовать время и дату", url='https://t.me/IRINaIGOREVNA8')
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(1)
+    return builder.as_markup()
+
+
 def my_subscription(user: User):
     builder = InlineKeyboardBuilder()
     if user.auto_payment:
@@ -137,4 +141,15 @@ def my_subscription(user: User):
         builder.button(text="Включить автоплатёж", callback_data='activate_autopayment')
     builder.button(text="☰ Меню", callback_data='start')
     builder.adjust(1)
+    return builder.as_markup()
+
+
+def marafon(user_id):
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Программа марфона", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/marafon_program?user_id={user_id}'))
+    builder.button(text="Взять место", url='https://t.me/IRINaIGOREVNA8')
+    builder.button(text="Информация о марафоне", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/marafon_info?user_id={user_id}'))
+    builder.button(text="Оплата и стоимость", web_app=WebAppInfo(url=f'https://{config.tg_bot.domen_web_app}.ru/payment_and_cost?user_id={user_id}'))
+    builder.button(text="☰ Меню", callback_data='start')
+    builder.adjust(2, 1, 1, 1)
     return builder.as_markup()

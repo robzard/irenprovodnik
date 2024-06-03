@@ -111,29 +111,18 @@ def send_data():
     return response.json()
 
 
-@app.route('/teyla_courses')  # Выбор курса (static)
-async def teyla_courses():
-    user_id = request.args.get('user_id')
-    await add_log_grafana(user_id, 'Страница Курсов')
-    print(os.getenv("DOMEN_WEB_APP"))
-    return render_template('teyla_courses.html',
-                           domen_web_app=os.getenv("DOMEN_WEB_APP"))
-
-
-@app.route('/course_program')  # Программа курса (static)
+@app.route('/marafon_program')  # Программа курса (static)
 async def course_program():
     user_id = request.args.get('user_id')
-    course_name_id = request.args.get('course_name_id')
-    await add_log_grafana(user_id, 'Страница Программа курса', courses_data[course_name_id]['name'])
-    return render_template(f'program_{course_name_id}.html')
+    await add_log_grafana(user_id, 'Страница Программа марафона')
+    return render_template(f'marafon_program.html')
 
 
-@app.route('/course_info')  # Информация о курсе (static)
+@app.route('/marafon_info')  # Информация о курсе (static)
 async def course_info():
     user_id = request.args.get('user_id')
-    course_name_id = request.args.get('course_name_id')
-    await add_log_grafana(user_id, 'Страница Информация курса', courses_data[course_name_id]['name'])
-    return render_template(f'info_{course_name_id}.html')
+    await add_log_grafana(user_id, 'Страница Информация марафона')
+    return render_template(f'marafon_info.html')
 
 
 @app.route('/payment_and_cost')  # Оплата и стоимость (dynamic)

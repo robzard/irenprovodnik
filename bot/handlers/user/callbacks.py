@@ -72,6 +72,14 @@ async def contacts(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.message.edit_reply_markup(reply_markup=inline.contacts())
 
 
+@router.callback_query(lambda c: c.data == 'consultation')
+async def contacts(callback_query: types.CallbackQuery, state: FSMContext):
+    await callback_query.answer()
+    image_path = './static/images/iren2.jpg'
+    media = FSInputFile(image_path)
+    await callback_query.message.answer_photo(photo=media, caption=LEXICON['consultation'], reply_markup=inline.consultation())
+
+
 @router.callback_query(lambda c: c.data == 'back_to_course')
 async def back_to_course(callback_query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
@@ -140,3 +148,11 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
         subscription_active_to = user.payment_date + timedelta(days=30)
         text_autopayment = 'Автоплатёж включён' if user.auto_payment else 'Автоплатёж выключен'
         await callback_query.message.edit_text(LEXICON['subscription'] % (subscription_active_to.__format__('%d.%m.%Y %H:%M'), text_autopayment), reply_markup=inline.my_subscription(user))
+
+
+@router.callback_query(lambda c: c.data == 'marafon')
+async def questions_back_menu(callback_query: types.CallbackQuery, state: FSMContext, bot: Bot):
+    await callback_query.answer()
+    image_path = './static/images/iren2.jpg'
+    media = FSInputFile(image_path)
+    await callback_query.message.answer_photo(photo=media, caption=LEXICON['marafon'], reply_markup=inline.marafon(callback_query.message.chat.id))
