@@ -151,7 +151,7 @@ async def process_what_bot_can_do(callback_query: types.CallbackQuery, state: FS
 
 
 @router.callback_query(lambda c: c.data == 'marafon')
-async def questions_back_menu(callback_query: types.CallbackQuery):
+async def marafon(callback_query: types.CallbackQuery):
     await callback_query.answer()
 
     image_path = './static/images/iren2.jpg'
@@ -164,10 +164,10 @@ async def questions_back_menu(callback_query: types.CallbackQuery):
 
 
 @router.callback_query(lambda c: c.data == 'pay_marafon')
-async def questions_back_menu(callback_query: types.CallbackQuery):
+async def pay_marafon(callback_query: types.CallbackQuery):
     await callback_query.answer()
 
     yk = YookassaHandler()
     url: str = yk.create_url_pay_marafon(callback_query.message.chat.id)
 
-    await callback_query.message.answer(text='Для оплаты нажмите на кнопку "Оплатить".\n\nСсылка для оплаты действительна всего 10 минут.', reply_markup=inline.pay_marafon(url))
+    await callback_query.message.answer(text=LEXICON['pay_marafon'], reply_markup=inline.pay_marafon(url))

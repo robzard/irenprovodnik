@@ -12,19 +12,11 @@ course_names = {'Стиль для себя': 'course_style_for_me',
                 'Профессия-стилист': 'course_profession_style'}
 
 
-class CourseNameFilter(Filter):
+class MarafonBuyFilter(Filter):
     async def __call__(self, message: types.Message) -> bool | dict:
-        if message.text in course_names.keys():
-            return {'course_names': course_names}
-        return False
-
-
-class CourseBuyFilter(Filter):
-    async def __call__(self, message: types.Message) -> bool | dict:
-        buy_course_label = 'купить курс - '
-        course_name = message.text.replace(buy_course_label, '')
-        if course_name in course_names.keys():
-            return {'course_names': course_names, 'course_name': course_name}
+        buy_course_label = 'Оплата марфона'
+        if message.text == buy_course_label:
+            return True
         return False
 
 
