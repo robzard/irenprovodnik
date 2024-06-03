@@ -128,14 +128,8 @@ async def course_info():
 @app.route('/payment_and_cost')  # Оплата и стоимость (dynamic)
 async def payment_and_cost():
     user_id = request.args.get('user_id')
-    course_name_id = request.args.get('course_name_id')
-    await add_log_grafana(user_id, 'Страница Оплата и стоимость', courses_data[course_name_id]['name'])
+    await add_log_grafana(user_id, 'Страница Оплата и стоимость')
     return render_template('payment_and_cost.html',
-                           course_name_id=course_name_id,
-                           course_cost=courses_data[course_name_id]['cost'],
-                           course_name=courses_data[course_name_id]['name'],
-                           monthly_payment=courses_data[course_name_id]['monthly_payment'],
-                           url_path=courses_data[course_name_id]['url_buy_path'],
                            domen_web_app=os.getenv("DOMEN_WEB_APP"))
 
 
