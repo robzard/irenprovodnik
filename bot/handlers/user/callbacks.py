@@ -170,4 +170,4 @@ async def questions_back_menu(callback_query: types.CallbackQuery):
     yk = YookassaHandler()
     url: str = yk.create_url_pay_marafon(callback_query.message.chat.id)
 
-    await callback_query.message.answer(text='Для оплаты нажмите на кнопку "Оплатить".\n\nСсылка для оплаты действительна всего 10 минут.', reply_markup=inline.pay_marafon(callback_query.message.chat.id, url))
+    await callback_query.message.answer(text='Для оплаты нажмите на кнопку "Оплатить".\n\nСсылка для оплаты действительна всего 10 минут.', reply_markup=inline.pay_marafon(url))
